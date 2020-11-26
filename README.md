@@ -1,2 +1,2 @@
-# restraintlib
-Bond length and angle restraints for DNA and RNA oligonucleotides
+# RestraintLib
+Bond length and angle restraints for DNA and RNA oligonucleotides.
