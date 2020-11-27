@@ -1,9 +1,8 @@
-import sys
-
-from mock import Mock
-from mock import patch
-
 # uncomment if cctbx not available
+
+# import sys
+# from unittest.mock import Mock
+# from unittest.mock import patch
 
 # mock cctbx modules
 # add them if they are not installed

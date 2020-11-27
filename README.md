@@ -17,9 +17,50 @@ Bond length and angle restraints for DNA and RNA oligonucleotides.
 
 # Dependencies
 
-Scripts were testes with 
+Scripts were tested with 
 
 * Python 2.7
-* cctbx
+* cctbx [cctbx_project](https://github.com/cctbx/cctbx_project)
 * scikit-learn==0.20.3
 * numpy==1.15.4
+
+# Installation
+
+It seems cctbx installation from pypi does not work at the moment (2020.11.27). 
+Intsall cctbx manually of from anacona cloud.
+
+## Option 1: use anaconda setup
+
+1. Download Miniconda: [minicnda](https://docs.conda.io/en/latest/miniconda.html#linux-installers). 
+You can download for example https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+2. Install Miniconda
+
+    ```bash
+    sh .\Miniconda3-latest-Linux-x86_64.sh
+    ```
+    
+3. Create environment (in the example with `Python3.8` and the `cctbx` env name)
+
+    ```bash
+    conda create -n cctbx python=3.8
+    conda activate cctbx
+    conda install -n cctbx -c conda-forge cctbx
+    ```
+    
+4. Install library
+
+## Option 2: manual installation
+
+Follow the installation instruction in the [cctbx_project](https://github.com/cctbx/cctbx_project)
+
+1. Download [https://raw.githubusercontent.com/cctbx/cctbx_project/master/libtbx/auto_build/bootstrap.py](https://raw.githubusercontent.com/cctbx/cctbx_project/master/libtbx/auto_build/bootstrap.py) in the directory where the cctbx and its dependencies shall be installed.
+2. On Linux or Mac OS execute it: python bootstrap.py (you may want to run it with the --help option first to discover the available options).
+
+Then install the library.
+
+1. Clone or download the source code.
+2. Install:
+    
+    ```bash  
+    cctbx.python setup.py install
+    ```
