@@ -4,13 +4,13 @@ from unittest import TestCase
 
 from restraintlib.atom import Atom
 from restraintlib.lib.PO4 import PO4_RESTRAINTS
-from restraintlib.restrains import DistanceMeasure
-from restraintlib.restrains import ConditionalRestraintItem
-from restraintlib.restrains import ConditionItem
-from restraintlib.restrains import ConditionalRestraint
-from restraintlib.restrains import ConditionalRestraintList
-from restraintlib.restrains import Restraint
-from restraintlib.restrains import MonomerRestraintGroup
+from restraintlib.restraints import DistanceMeasure
+from restraintlib.restraints import ConditionalRestraintItem
+from restraintlib.restraints import ConditionItem
+from restraintlib.restraints import ConditionalRestraint
+from restraintlib.restraints import ConditionalRestraintList
+from restraintlib.restraints import Restraint
+from restraintlib.restraints import MonomerRestraintGroup
 
 
 class DistanceMeasureTestCase(TestCase):

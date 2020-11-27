@@ -1,12 +1,12 @@
 import sys
-from restrains import parse_pdb
+from restraints import parse_pdb
 
 from printer import CsvPrinter
 from printer import ShelxPrinter
 from printer import PhenixPrinter
 from printer import RefmacPrinter
 
-from restrains import load_restraints_lib
+from restraints import load_restraints_lib
 
 
 class AllowedRestraintsConfig(object):
@@ -40,7 +40,7 @@ class RestrainLib(object):
     def report_progress(self, percent, total):
         pass
 
-    def produce_restrains(self, in_pdb, printer, allowed_restraints_config):
+    def produce_restraints(self, in_pdb, printer, allowed_restraints_config):
         if printer == 'P':
             printer_cls = PhenixPrinter
         elif printer == 'S':

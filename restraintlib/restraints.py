@@ -967,7 +967,7 @@ def run():
         in_pdb = sys.argv[1]
         out_filename = sys.argv[2]
     else:
-        print 'usage: restrains.py [printer] in.pdb restraints.txt'
+        print 'usage: restraints.py [printer] in.pdb restraints.txt'
         print '       Printer is one of Refmac, Phenix, Shelxl, Csv. Default=Refmac'
         printer = 'Refmac'
         in_pdb = 'in.pdb'

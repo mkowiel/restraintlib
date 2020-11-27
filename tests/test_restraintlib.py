@@ -6,9 +6,9 @@ from StringIO import StringIO
 from unittest import TestCase
 from unittest import expectedFailure
 
-from restraintlib.restrainlib import AllowedRestraintsConfig
-from restraintlib.restrainlib import RestrainLib
-from restraintlib.restrains import VERSION
+from restraintlib.restraintlib import AllowedRestraintsConfig
+from restraintlib.restraintlib import RestrainLib
+from restraintlib.restraints import VERSION
 
 
 class RestrainLibTestCase(TestCase):
@@ -467,72 +467,72 @@ class RestrainLibTestCase(TestCase):
         for line in data.split('\n'):
             self.assertLessEqual(len(line), max_line_size, msg="Line too long {}".format(line))
 
-    def test_produce_restrains_phenix_3p4j_pdb(self):
-        self.lib.produce_restrains(self.pdb_3p4j, 'P', self.restraints_config)
+    def test_produce_restraints_phenix_3p4j_pdb(self):
+        self.lib.produce_restraints(self.pdb_3p4j, 'P', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_3p4j(data)
 
-    def test_produce_restrains_shelx_3p4j_pdb(self):
-        self.lib.produce_restrains(self.pdb_3p4j, 'S', self.restraints_config)
-        data = self.buffer.getvalue()
-        self.assert_3p4j(data)
-        self.assert_length_for_shelx(data)
-
-    def test_produce_restrains_refmac_3p4j_pdb(self):
-        self.lib.produce_restrains(self.pdb_3p4j, 'R', self.restraints_config)
-        data = self.buffer.getvalue()
-        self.assert_3p4j(data)
-
-    def test_produce_restrains_phenix_3p4j_mmcif(self):
-        self.lib.produce_restrains(self.mmcif_3p4j, 'P', self.restraints_config)
-        data = self.buffer.getvalue()
-        self.assert_3p4j(data)
-
-    def test_produce_restrains_shelx_3p4j_mmcif(self):
-        self.lib.produce_restrains(self.mmcif_3p4j, 'S', self.restraints_config)
+    def test_produce_restraints_shelx_3p4j_pdb(self):
+        self.lib.produce_restraints(self.pdb_3p4j, 'S', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_3p4j(data)
         self.assert_length_for_shelx(data)
 
-    def test_produce_restrains_refmac_3p4j_mmcif(self):
-        self.lib.produce_restrains(self.mmcif_3p4j, 'R', self.restraints_config)
+    def test_produce_restraints_refmac_3p4j_pdb(self):
+        self.lib.produce_restraints(self.pdb_3p4j, 'R', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_3p4j(data)
 
-    def test_produce_restrains_phenix_1d8g_pdb(self):
-        self.lib.produce_restrains(self.pdb_1d8g, 'P', self.restraints_config)
+    def test_produce_restraints_phenix_3p4j_mmcif(self):
+        self.lib.produce_restraints(self.mmcif_3p4j, 'P', self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assert_3p4j(data)
+
+    def test_produce_restraints_shelx_3p4j_mmcif(self):
+        self.lib.produce_restraints(self.mmcif_3p4j, 'S', self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assert_3p4j(data)
+        self.assert_length_for_shelx(data)
+
+    def test_produce_restraints_refmac_3p4j_mmcif(self):
+        self.lib.produce_restraints(self.mmcif_3p4j, 'R', self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assert_3p4j(data)
+
+    def test_produce_restraints_phenix_1d8g_pdb(self):
+        self.lib.produce_restraints(self.pdb_1d8g, 'P', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_1d8g(data)
 
-    def test_produce_restrains_shelx_1d8g_pdb(self):
-        self.lib.produce_restrains(self.pdb_1d8g, 'S', self.restraints_config)
+    def test_produce_restraints_shelx_1d8g_pdb(self):
+        self.lib.produce_restraints(self.pdb_1d8g, 'S', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_1d8g(data)
         self.assert_length_for_shelx(data)
 
-    def test_produce_restrains_refmac_1d8g_pdb(self):
-        self.lib.produce_restrains(self.pdb_1d8g, 'R', self.restraints_config)
+    def test_produce_restraints_refmac_1d8g_pdb(self):
+        self.lib.produce_restraints(self.pdb_1d8g, 'R', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_1d8g(data)
 
-    def test_produce_restrains_phenix_3ssf_mmcif(self):
-        self.lib.produce_restrains(self.mmcif_3ssf, 'P', self.restraints_config)
+    def test_produce_restraints_phenix_3ssf_mmcif(self):
+        self.lib.produce_restraints(self.mmcif_3ssf, 'P', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_3ssf(data)
 
-    def test_produce_restrains_phenix_3p4j_pdb_mmcif_same(self):
-        self.lib.produce_restrains(self.pdb_3p4j, 'P', self.restraints_config)
+    def test_produce_restraints_phenix_3p4j_pdb_mmcif_same(self):
+        self.lib.produce_restraints(self.pdb_3p4j, 'P', self.restraints_config)
         data_pdb = self.buffer.getvalue()
         self.buffer = StringIO()
         self.lib = RestrainLib(log_stream=self.buffer)
-        self.lib.produce_restrains(self.mmcif_3p4j, 'P', self.restraints_config)
+        self.lib.produce_restraints(self.mmcif_3p4j, 'P', self.restraints_config)
         data_cif = self.buffer.getvalue()
         data_pdb = [line for line in data_pdb.splitlines() if not line.startswith("#")]
         data_cif = [line for line in data_cif.splitlines() if not line.startswith("#")]
         self.assertEqual(data_pdb, data_cif)
 
-    def test_produce_restrains_refmac_iso2_pdb(self):
-        self.lib.produce_restrains(self.pdb_ig, 'R', self.restraints_config)
+    def test_produce_restraints_refmac_iso2_pdb(self):
+        self.lib.produce_restraints(self.pdb_ig, 'R', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_iso2(data)
         self.assertIn("exte dist first chain D resi 11 atom C1' second chain D resi 11 atom N9 value 1.", data)
@@ -541,22 +541,22 @@ class RestrainLibTestCase(TestCase):
 
     # fail since there are multiple outputs for surrounding of disorder atoms
     @expectedFailure
-    def test_produce_restrains_phenix_disorder_pdb(self):
-        self.lib.produce_restrains(self.pdb_disorder, 'P', self.restraints_config)
+    def test_produce_restraints_phenix_disorder_pdb(self):
+        self.lib.produce_restraints(self.pdb_disorder, 'P', self.restraints_config)
         data = self.buffer.getvalue()
         # if there are no duplicates there should be 2
         self.assertEqual(
             4, len([m.start() for m in re.finditer('atom_selection_1 = chain B and resid 20 and name OP1', data)])
         )
 
-    def test_produce_restrains_shelx_4r15_pdb(self):
+    def test_produce_restraints_shelx_4r15_pdb(self):
         restraints_config = AllowedRestraintsConfig(
             po4=False,
             po4terminal=False,
             nucleicacidbases=False,
             nucleicacidisobases=False,
         )
-        self.lib.produce_restrains(self.pdb_4r15, 'S', restraints_config)
+        self.lib.produce_restraints(self.pdb_4r15, 'S', restraints_config)
         data = self.buffer.getvalue()
         self.assert_4r15(data)
         self.assert_length_for_shelx(data)

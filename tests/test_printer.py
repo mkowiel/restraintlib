@@ -6,8 +6,8 @@ from restraintlib.printer import PhenixPrinter
 from restraintlib.printer import RefmacPrinter
 from restraintlib.printer import ShelxPrinter
 from restraintlib.printer import CsvPrinter
-from restraintlib.restrains import Restraint
-from restraintlib.restrains import load_restraints_lib
+from restraintlib.restraints import Restraint
+from restraintlib.restraints import load_restraints_lib
 
 
 class PrinterTestCase(TestCase):
