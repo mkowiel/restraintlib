@@ -1,33 +1,36 @@
+from __future__ import print_function
+
 # to be run with cctbx.python
 import iotbx.pdb
 import math
 import os
 import sys
 from collections import defaultdict
+import six
 from sklearn.externals import joblib
 
-from atom import Atom
-from lib import PO4
-from lib import PO4_terminal_C3
-from lib import PO4_terminal_C5
-from lib import deoxyribose_purine
-from lib import deoxyribose_purine_terminal_C3
-from lib import deoxyribose_purine_terminal_C5
-from lib import deoxyribose_pyrimidine
-from lib import deoxyribose_pyrimidine_terminal_C3
-from lib import deoxyribose_pyrimidine_terminal_C5
-from lib import nucleic_acid_bases
-from lib import nucleic_acid_isobases
-from lib import ribose_purine
-from lib import ribose_purine_terminal_C3
-from lib import ribose_purine_terminal_C5
-from lib import ribose_pyrimidine
-from lib import ribose_pyrimidine_terminal_C3
-from lib import ribose_pyrimidine_terminal_C5
-from printer import CsvPrinter
-from printer import PhenixPrinter
-from printer import RefmacPrinter
-from printer import ShelxPrinter
+from .atom import Atom
+from .lib import PO4
+from .lib import PO4_terminal_C3
+from .lib import PO4_terminal_C5
+from .lib import deoxyribose_purine
+from .lib import deoxyribose_purine_terminal_C3
+from .lib import deoxyribose_purine_terminal_C5
+from .lib import deoxyribose_pyrimidine
+from .lib import deoxyribose_pyrimidine_terminal_C3
+from .lib import deoxyribose_pyrimidine_terminal_C5
+from .lib import nucleic_acid_bases
+from .lib import nucleic_acid_isobases
+from .lib import ribose_purine
+from .lib import ribose_purine_terminal_C3
+from .lib import ribose_purine_terminal_C5
+from .lib import ribose_pyrimidine
+from .lib import ribose_pyrimidine_terminal_C3
+from .lib import ribose_pyrimidine_terminal_C5
+from .printer import CsvPrinter
+from .printer import PhenixPrinter
+from .printer import RefmacPrinter
+from .printer import ShelxPrinter
 
 from cctbx.array_family import flex
 
@@ -571,7 +574,7 @@ class MonomerRestraintGroup(object):
         self.name = name
         self.res_names = res_names
         self.atom_labels = atom_labels
-        self._valid_atom_labels = atom_labels.keys()
+        self._valid_atom_labels = list(atom_labels.keys())
         self.res_numbers = res_numbers
         self.conditions = conditions
         self.disallowed_conditions = disallowed_conditions
@@ -623,7 +626,7 @@ class MonomerRestraintGroup(object):
     def create_res_groups(self):
         preliminary_groups = defaultdict(AtomGroupCache)
 
-        for chain_id, registered_res_id in self._registered_res_id.iteritems():
+        for chain_id, registered_res_id in six.iteritems(self._registered_res_id):
             for res_id in registered_res_id:
                 for i_atom, atom in enumerate(self.atoms):
                     key = "{}_{:05d}".format(chain_id, res_id)
@@ -639,7 +642,7 @@ class MonomerRestraintGroup(object):
                     ):
                         preliminary_groups[key].add_neighbour(atom)
 
-        for key, preliminary_group in preliminary_groups.iteritems():
+        for key, preliminary_group in six.iteritems(preliminary_groups):
             p_group_atoms = preliminary_group.iter_atoms()
             locs = set([atom.alt_loc for atom in p_group_atoms])
             locs.discard('')
@@ -659,11 +662,11 @@ class MonomerRestraintGroup(object):
                 self.groups[key] = preliminary_group
 
     def _print_groups(self):
-        print "# PRINT GROUPS {}".format(self.name)
-        for key, group in self.groups.iteritems():
+        print("# PRINT GROUPS {}".format(self.name))
+        for key, group in six.iteritems(self.groups):
             for atom in group.iter_atoms():
-                print self.name, key, atom.chain_id, atom.res_id, atom.res_name, atom.atom_name, atom.alt_loc, atom.atom_xyz
-        print "# PRINT GROUPS finished"
+                print(self.name, key, atom.chain_id, atom.res_id, atom.res_name, atom.atom_name, atom.alt_loc, atom.atom_xyz)
+        print("# PRINT GROUPS finished")
 
     def is_valid_atom_group(self, group_key, group):
         split_key = group_key.split("_")
@@ -680,7 +683,7 @@ class MonomerRestraintGroup(object):
             atom_2 = group.find_neighbour(chain_id, atom_name_2, res_id + res_id_mod_2, alt_id)
 
             if atom_1 is None or atom_2 is None or atom_1.dist(atom_2) > dist:
-                print "{} {} {}: non valid dist: {}, atom1: {} {} {}, atom2: {} {} {}".format(
+                print("{} {} {}: non valid dist: {}, atom1: {} {} {}, atom2: {} {} {}".format(
                     self.name,
                     chain_id,
                     res_id,
@@ -691,7 +694,7 @@ class MonomerRestraintGroup(object):
                     atom_2.chain_id if atom_2 else '',
                     atom_2.res_id if atom_2 else '',
                     atom_name_2,
-                )
+                ))
                 return False
         return True
 
@@ -700,58 +703,58 @@ class MonomerRestraintGroup(object):
         Deletes groups that are not bonded correctly
         """
         if verbose > 0:
-            print '#'*60
-            print "# SEARCHING for {} group/monomer".format(self.name)
-        for group_key, group in sorted(self.groups.iteritems()):
+            print('#'*60)
+            print("# SEARCHING for {} group/monomer".format(self.name))
+        for group_key, group in sorted(six.iteritems(self.groups)):
             if not self.is_valid_atom_group(group_key, group):
                 del self.groups[group_key]
                 if verbose > 0:
-                    print "#     {} ignoring".format(group_key)
+                    print("#     {} ignoring".format(group_key))
             else:
                 if verbose > 0:
-                    print "#     {} recognized as {}".format(group_key, self.name)
+                    print("#     {} recognized as {}".format(group_key, self.name))
         if verbose > 0:
-            print "# SEARCHING finished".format()
+            print("# SEARCHING finished".format())
 
     def atom_restraints(self, verbose=0):
         result_restraints = []
         if verbose > 0:
-            print '# ANALYZING {} group/monomer'.format(self.name)
-        for atom_group_key, atom_group in sorted(self.groups.iteritems()):
+            print('# ANALYZING {} group/monomer'.format(self.name))
+        for atom_group_key, atom_group in sorted(six.iteritems(self.groups)):
             atoms = {atom.atom_name: atom for atom in atom_group.iter_atoms()}
             if verbose > 1:
-                print "#     {} atoms for {} {}".format(atom_group_key, self.name, list(atoms.keys()))
+                print("#     {} atoms for {} {}".format(atom_group_key, self.name, list(atoms.keys())))
 
             feasible_restraints = self.restraints.get_feasible(atoms)
             if verbose > 1:
-                print "#     {} feasible_restraints for {} {}".format(atom_group_key, self.name, [
+                print("#     {} feasible_restraints for {} {}".format(atom_group_key, self.name, [
                     fc.name for fc in feasible_restraints
-                ])
+                ]))
 
             closest_restraint = feasible_restraints.find_restraint_closest(atoms, self.distance_measure)
 
             if closest_restraint is not None:
                 if verbose > 0:
-                    print "#     {} recognized as {} {}".format(atom_group_key, self.name, closest_restraint.name)
+                    print("#     {} recognized as {} {}".format(atom_group_key, self.name, closest_restraint.name))
             else:
                 if verbose > 0:
-                    print "#     {} not feasible".format(atom_group_key)
+                    print("#     {} not feasible".format(atom_group_key))
 
                 closest_restraint = self.restraints.get_default()
 
                 if closest_restraint is None:
                     closest_restraint = self.restraints.find_condition_closest(atoms, self.condition_measure)
                     if verbose > 0:
-                        print "#             closest to {} {}".format(self.name, closest_restraint.name)
+                        print("#             closest to {} {}".format(self.name, closest_restraint.name))
                 else:
                     if verbose > 0:
-                        print "#             default used"
-                        print "#             set default {} {}".format(self.name, closest_restraint.name)
+                        print("#             default used")
+                        print("#             set default {} {}".format(self.name, closest_restraint.name))
 
             result_restraints.extend(closest_restraint.get_restraints(atoms))
         if verbose > 0:
-            print '# ANALYZING finished'
-            print '#'*60
+            print('# ANALYZING finished')
+            print('#'*60)
         return result_restraints
 
     def prepare_restraints(self, verbose=0):
@@ -769,17 +772,17 @@ def save(stream, restraint_groups, restraint_text_all, printer_cls, in_filename)
     printer_cls.save_input_filename(stream, in_filename)
 
     if len(restraint_text_all) == 0:
-        print >> stream, "# There were no restraints to be created based on the submitted PDB file"
+        print("# There were no restraints to be created based on the submitted PDB file", file=stream)
     else:
         header = printer_cls.header()
         if header != '':
-            print >> stream, header
+            print(header, file=stream)
 
-        print >> stream, "\n".join(restraint_text_all)
+        print("\n".join(restraint_text_all), file=stream)
 
         footer = printer_cls.footer()
         if footer != '':
-            print >> stream, footer
+            print(footer, file=stream)
 
 
 def print_info_about_restraints(all_restraints):
@@ -853,7 +856,7 @@ def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, 
     if len(restraint_text) > 0:
         restraint_text_all.append(restraint_text)
 
-    if type(out_filename) == str or type(out_filename) == unicode:
+    if type(out_filename) == str or type(out_filename) == six.text_type:
         with open(out_filename, 'w') as res_file:
             save(res_file, allowed_restraint_groups, restraint_text_all, printer_cls, in_filename)
     else:
@@ -967,8 +970,8 @@ def run():
         in_pdb = sys.argv[1]
         out_filename = sys.argv[2]
     else:
-        print 'usage: restraints.py [printer] in.pdb restraints.txt'
-        print '       Printer is one of Refmac, Phenix, Shelxl, Csv. Default=Refmac'
+        print('usage: restraints.py [printer] in.pdb restraints.txt')
+        print('       Printer is one of Refmac, Phenix, Shelxl, Csv. Default=Refmac')
         printer = 'Refmac'
         in_pdb = 'in.pdb'
         out_filename = 'restraints.txt'
@@ -983,7 +986,7 @@ def run():
     elif printer == 'csv':
         printer_cls = CsvPrinter
     else:
-        print "Unknown printer {}, should be one of Refmac, Phenix, Shelxl".format(printer)
+        print("Unknown printer {}, should be one of Refmac, Phenix, Shelxl".format(printer))
         return
 
     restraint_list = load_restraints_lib()

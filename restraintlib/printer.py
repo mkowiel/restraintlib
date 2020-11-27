@@ -1,4 +1,5 @@
 # coding: utf-8
+from __future__ import print_function
 
 import logging
 import math
@@ -76,42 +77,42 @@ class PrinterBase(object):
         comm_begin = cls.header_comment_begin()
         comm_end = cls.header_comment_end()
 
-        print >> stream, "{}#########################################################################{}".format(comm_begin, comm_end)
-        print >> stream, "{}                   RestraintLib version {}                        {}".format(comm_begin, version, comm_end)
-        print >> stream, "{}#########################################################################{}".format(comm_begin, comm_end)
-        print >> stream, "{}                                                                         {}".format(comm_begin, comm_end)
-        print >> stream, "{} M.Kowiel, D.Brzezinski, M.Jaskolski (2016)                              {}".format(comm_begin, comm_end)
-        print >> stream, "{} Conformation-dependent restraints for polynucleotides:                  {}".format(comm_begin, comm_end)
-        print >> stream, "{} I. Clustering of the geometry of the phosphodiester group.              {}".format(comm_begin, comm_end)
-        print >> stream, "{} Nucleic Acids Res. 44, 8479–8489.                                       {}".format(comm_begin, comm_end)
-        print >> stream, "{} https://doi.org/10.1093/nar/gkw717                                      {}".format(comm_begin, comm_end)
-        print >> stream, "{}                                                                         {}".format(comm_begin, comm_end)
-        print >> stream, "{} M.Gilski, J.Zhao, M.Kowiel, D.Brzezinski, D.H.Turner, M.Jaskolski (2019){}".format(comm_begin, comm_end)
-        print >> stream, "{} Accurate geometrical restraints for Watson-Crick base pairs.            {}".format(comm_begin, comm_end)
-        print >> stream, "{} Acta Cryst. B75, 235-245.                                               {}".format(comm_begin, comm_end)
-        print >> stream, "{} https://doi.org/10.1107/S2052520619002002                               {}".format(comm_begin, comm_end)
-        print >> stream, "{}                                                                         {}".format(comm_begin, comm_end)
-        print >> stream, "{} M.Kowiel, D.Brzezinski, M. Gilski, M.Jaskolski (2020)                   {}".format(comm_begin, comm_end)
-        print >> stream, "{} Conformation-dependent restraints for polynucleotides: The sugar moiety.{}".format(comm_begin, comm_end)
-        print >> stream, "{} Nucleic Acids Res. 48, 962–973.                                         {}".format(comm_begin, comm_end)
-        print >> stream, "{} https://doi.org/10.1093/nar/gkz1122                                     {}".format(comm_begin, comm_end)
-        print >> stream, "{}                                                                         {}".format(comm_begin, comm_end)
-        print >> stream, "{}#########################################################################{}".format(comm_begin, comm_end)
-        print >> stream, "{}                                                                         {}".format(comm_begin, comm_end)
-        print >> stream, "{} Restraints for:                                                         {}".format(comm_begin, comm_end)
+        print("{}#########################################################################{}".format(comm_begin, comm_end), file=stream)
+        print("{}                   RestraintLib version {}                        {}".format(comm_begin, version, comm_end), file=stream)
+        print("{}#########################################################################{}".format(comm_begin, comm_end), file=stream)
+        print("{}                                                                         {}".format(comm_begin, comm_end), file=stream)
+        print("{} M.Kowiel, D.Brzezinski, M.Jaskolski (2016)                              {}".format(comm_begin, comm_end), file=stream)
+        print("{} Conformation-dependent restraints for polynucleotides:                  {}".format(comm_begin, comm_end), file=stream)
+        print("{} I. Clustering of the geometry of the phosphodiester group.              {}".format(comm_begin, comm_end), file=stream)
+        print("{} Nucleic Acids Res. 44, 8479–8489.                                       {}".format(comm_begin, comm_end), file=stream)
+        print("{} https://doi.org/10.1093/nar/gkw717                                      {}".format(comm_begin, comm_end), file=stream)
+        print("{}                                                                         {}".format(comm_begin, comm_end), file=stream)
+        print("{} M.Gilski, J.Zhao, M.Kowiel, D.Brzezinski, D.H.Turner, M.Jaskolski (2019){}".format(comm_begin, comm_end), file=stream)
+        print("{} Accurate geometrical restraints for Watson-Crick base pairs.            {}".format(comm_begin, comm_end), file=stream)
+        print("{} Acta Cryst. B75, 235-245.                                               {}".format(comm_begin, comm_end), file=stream)
+        print("{} https://doi.org/10.1107/S2052520619002002                               {}".format(comm_begin, comm_end), file=stream)
+        print("{}                                                                         {}".format(comm_begin, comm_end), file=stream)
+        print("{} M.Kowiel, D.Brzezinski, M. Gilski, M.Jaskolski (2020)                   {}".format(comm_begin, comm_end), file=stream)
+        print("{} Conformation-dependent restraints for polynucleotides: The sugar moiety.{}".format(comm_begin, comm_end), file=stream)
+        print("{} Nucleic Acids Res. 48, 962–973.                                         {}".format(comm_begin, comm_end), file=stream)
+        print("{} https://doi.org/10.1093/nar/gkz1122                                     {}".format(comm_begin, comm_end), file=stream)
+        print("{}                                                                         {}".format(comm_begin, comm_end), file=stream)
+        print("{}#########################################################################{}".format(comm_begin, comm_end), file=stream)
+        print("{}                                                                         {}".format(comm_begin, comm_end), file=stream)
+        print("{} Restraints for:                                                         {}".format(comm_begin, comm_end), file=stream)
         for line in libs_lines:
-            print >> stream, "{}  {}{} {}".format(comm_begin, line, ' ' * (70 - len(line)), comm_end)
-        print >> stream, "{}                                                                         {}".format(comm_begin, comm_end)
-        print >> stream, "{}#########################################################################{}".format(comm_begin, comm_end)
+            print("{}  {}{} {}".format(comm_begin, line, ' ' * (70 - len(line)), comm_end), file=stream)
+        print("{}                                                                         {}".format(comm_begin, comm_end), file=stream)
+        print("{}#########################################################################{}".format(comm_begin, comm_end), file=stream)
 
     @classmethod
     def save_input_filename(cls, stream, in_filename):
         comm_begin = cls.header_comment_begin()
         comm_end = cls.header_comment_end()
 
-        print >> stream, "{} Time of creation: {}Z".format(comm_begin, datetime.utcnow().isoformat())
-        print >> stream, "{} Input filename: {}".format(comm_begin, os.path.basename(in_filename))
-        print >> stream, "{}#########################################################################{}".format(comm_begin, comm_end)
+        print("{} Time of creation: {}Z".format(comm_begin, datetime.utcnow().isoformat()), file=stream)
+        print("{} Input filename: {}".format(comm_begin, os.path.basename(in_filename)), file=stream)
+        print("{}#########################################################################{}".format(comm_begin, comm_end), file=stream)
 
 
 class ShelxPrinter(PrinterBase):

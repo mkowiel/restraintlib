@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-from StringIO import StringIO
+from six import StringIO
 
 from unittest import TestCase
 from unittest import expectedFailure

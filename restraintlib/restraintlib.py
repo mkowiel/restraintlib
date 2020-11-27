@@ -1,12 +1,15 @@
+from __future__ import print_function
+
 import sys
-from restraints import parse_pdb
+import six
 
-from printer import CsvPrinter
-from printer import ShelxPrinter
-from printer import PhenixPrinter
-from printer import RefmacPrinter
+from .printer import CsvPrinter
+from .printer import ShelxPrinter
+from .printer import PhenixPrinter
+from .printer import RefmacPrinter
 
-from restraints import load_restraints_lib
+from .restraints import load_restraints_lib
+from .restraints import parse_pdb
 
 
 class AllowedRestraintsConfig(object):
@@ -32,7 +35,7 @@ class RestrainLib(object):
 
     def __init__(self, log_stream=None):
         self.log_stream = sys.stdout
-        if(type(log_stream) == str or type(log_stream) == unicode):
+        if(type(log_stream) == str or type(log_stream) == six.text_type):
             self.log_stream = open(log_stream, 'w')
         elif log_stream is not None:
             self.log_stream = log_stream

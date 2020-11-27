@@ -23,6 +23,7 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     install_requires=[
+        'six',
         'cctbx>=2020.8',
         'scikit-learn==0.20.3',
     ]
