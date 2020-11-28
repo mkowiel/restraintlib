@@ -229,8 +229,6 @@ class ConditionItem(object):
         '_sigma',
     )
 
-    multiplier = 4
-
     def __init__(self, condition_type, name, atom_names, value, sigma):
         if condition_type not in ('torsion', 'pseudorotation'):
             raise Exception('Unknown condition type')
@@ -239,6 +237,7 @@ class ConditionItem(object):
         self.atom_names = atom_names
         self._value = self.fix_torsion(value)
         self._sigma = sigma
+        self.multiplier = 4
 
     def value(self, atom_map=None):
         return self._value
