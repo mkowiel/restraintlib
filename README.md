@@ -39,12 +39,14 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
     sh .\Miniconda3-latest-Linux-x86_64.sh
     ```
     
-3. Create environment (in the example with `Python3.8` and the `cctbx` env name)
+3. Create environment (in the example with `Python3.7` and the `cctbx` env name)
 
     ```bash
-    conda create -n cctbx python=3.8
+    conda create -n cctbx python=3.7
     conda activate cctbx
     conda install -n cctbx -c conda-forge cctbx
+    conda install -n cctbx -c conda-forge pytest
+    conda install -n cctbx -c conda-forge scikit-learn==0.20.3
     ```
     
 4. Install library
