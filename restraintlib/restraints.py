@@ -34,7 +34,7 @@ from .printer import ShelxPrinter
 
 from cctbx.array_family import flex
 
-VERSION = '2019.10.5'
+VERSION = '2019.11.1'
 
 
 class DistanceMeasure(object):

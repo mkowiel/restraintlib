@@ -1,0 +1,10 @@
+
+# 2019.11.1
+
+Make code python3 compatible.
+Use pickle instead of joblib.
+Add script to recalculate functional models.
+
+# 2019.10.5
+
+Fix minor bugs.
