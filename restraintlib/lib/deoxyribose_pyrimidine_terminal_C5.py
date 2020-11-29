@@ -192,10 +192,10 @@ DEOXYRIBOSE_PYRIMIDINE_TERMINAL_C5_BASE_FUNC_OF_TORSION_CHI_RESTRAINTS = [
     {
         'conditions': [],
         'name': 'deoxyribose_pyrimidine_terminal_C5==Base=pyrimidine',
-        'restraints': [   ['angle', "aN1C1'C2'", ['N1', "C1'", "C2'"], None, None, None, None, "pyrimidine-N1-C1'-C2' or N9-C1'-C2'.joblib", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
-                          ['angle', "aC1'N1C2", ["C1'", 'N1', 'C2'], None, None, None, None, "pyrimidine-C1'-N1-C2 or C1'-N9-C4.joblib", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
-                          ['angle', "aC1'N1C6", ["C1'", 'N1', 'C6'], None, None, None, None, "pyrimidine-C1'-N1-C6 or C1'-N9-C8.joblib", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
-                          ['angle', "aN1C1'O4'", ['N1', "C1'", "O4'"], None, None, None, None, "pyrimidine-N1-C1'-O4' or N9-C1'-O4'.joblib", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]]]
+        'restraints': [   ['angle', "aN1C1'C2'", ['N1', "C1'", "C2'"], None, None, None, None, "pyrimidine-N1-C1'-C2' or N9-C1'-C2'.pickle", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
+                          ['angle', "aC1'N1C2", ["C1'", 'N1', 'C2'], None, None, None, None, "pyrimidine-C1'-N1-C2 or C1'-N9-C4.pickle", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
+                          ['angle', "aC1'N1C6", ["C1'", 'N1', 'C6'], None, None, None, None, "pyrimidine-C1'-N1-C6 or C1'-N9-C8.pickle", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
+                          ['angle', "aN1C1'O4'", ['N1', "C1'", "O4'"], None, None, None, None, "pyrimidine-N1-C1'-O4' or N9-C1'-O4'.pickle", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]]]
     }
 ]
 
@@ -259,26 +259,26 @@ DEOXYRIBOSE_PYRIMIDINE_TERMINAL_C5_SUGAR_CONFORMATION_FUNC_OF_TAU_MAX_RESTRAINTS
     {
         'conditions': [['pseudorotation', "pC1'C2'C3'C4'O4'", ["C1'", "C2'", "C3'", "C4'", "O4'"], 162, 4.5]],
         'name': "deoxyribose_pyrimidine_terminal_C5==Sugar=deoxyribose__Conformation=C2'-endo",
-        'restraints': [   ['angle', "aC1'C2'C3'", ["C1'", "C2'", "C3'"], None, None, None, None, "deoxyribose-C2'-endo-C1'-C2'-C3'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC2'C3'C4'", ["C2'", "C3'", "C4'"], None, None, None, None, "deoxyribose-C2'-endo-C2'-C3'-C4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC3'C4'O4'", ["C3'", "C4'", "O4'"], None, None, None, None, "deoxyribose-C2'-endo-C3'-C4'-O4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC1'O4'C4'", ["C1'", "O4'", "C4'"], None, None, None, None, "deoxyribose-C2'-endo-C1'-O4'-C4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]]]
+        'restraints': [   ['angle', "aC1'C2'C3'", ["C1'", "C2'", "C3'"], None, None, None, None, "deoxyribose-C2'-endo-C1'-C2'-C3'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC2'C3'C4'", ["C2'", "C3'", "C4'"], None, None, None, None, "deoxyribose-C2'-endo-C2'-C3'-C4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC3'C4'O4'", ["C3'", "C4'", "O4'"], None, None, None, None, "deoxyribose-C2'-endo-C3'-C4'-O4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC1'O4'C4'", ["C1'", "O4'", "C4'"], None, None, None, None, "deoxyribose-C2'-endo-C1'-O4'-C4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]]]
     },
     {
         'conditions': [['pseudorotation', "pC1'C2'C3'C4'O4'", ["C1'", "C2'", "C3'", "C4'", "O4'"], 18, 4.5]],
         'name': "deoxyribose_pyrimidine_terminal_C5==Sugar=deoxyribose__Conformation=C3'-endo",
-        'restraints': [   ['angle', "aC1'C2'C3'", ["C1'", "C2'", "C3'"], None, None, None, None, "deoxyribose-C3'-endo-C1'-C2'-C3'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC2'C3'C4'", ["C2'", "C3'", "C4'"], None, None, None, None, "deoxyribose-C3'-endo-C2'-C3'-C4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC3'C4'O4'", ["C3'", "C4'", "O4'"], None, None, None, None, "deoxyribose-C3'-endo-C3'-C4'-O4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC1'O4'C4'", ["C1'", "O4'", "C4'"], None, None, None, None, "deoxyribose-C3'-endo-C1'-O4'-C4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]]]
+        'restraints': [   ['angle', "aC1'C2'C3'", ["C1'", "C2'", "C3'"], None, None, None, None, "deoxyribose-C3'-endo-C1'-C2'-C3'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC2'C3'C4'", ["C2'", "C3'", "C4'"], None, None, None, None, "deoxyribose-C3'-endo-C2'-C3'-C4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC3'C4'O4'", ["C3'", "C4'", "O4'"], None, None, None, None, "deoxyribose-C3'-endo-C3'-C4'-O4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC1'O4'C4'", ["C1'", "O4'", "C4'"], None, None, None, None, "deoxyribose-C3'-endo-C1'-O4'-C4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]]]
     },
     {
         'conditions': [],
         'name': 'deoxyribose_pyrimidine_terminal_C5==Sugar=deoxyribose__Conformation=Other',
-        'restraints': [   ['angle', "aC1'C2'C3'", ["C1'", "C2'", "C3'"], None, None, None, None, "deoxyribose-Other-C1'-C2'-C3'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC2'C3'C4'", ["C2'", "C3'", "C4'"], None, None, None, None, "deoxyribose-Other-C2'-C3'-C4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC3'C4'O4'", ["C3'", "C4'", "O4'"], None, None, None, None, "deoxyribose-Other-C3'-C4'-O4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
-                          ['angle', "aC1'O4'C4'", ["C1'", "O4'", "C4'"], None, None, None, None, "deoxyribose-Other-C1'-O4'-C4'.joblib", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]]]
+        'restraints': [   ['angle', "aC1'C2'C3'", ["C1'", "C2'", "C3'"], None, None, None, None, "deoxyribose-Other-C1'-C2'-C3'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC2'C3'C4'", ["C2'", "C3'", "C4'"], None, None, None, None, "deoxyribose-Other-C2'-C3'-C4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC3'C4'O4'", ["C3'", "C4'", "O4'"], None, None, None, None, "deoxyribose-Other-C3'-C4'-O4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]],
+                          ['angle', "aC1'O4'C4'", ["C1'", "O4'", "C4'"], None, None, None, None, "deoxyribose-Other-C1'-O4'-C4'.pickle", ['tau_max', ["C1'", "C2'", "C3'", "C4'", "O4'"]]]]
     }
 ]
 
@@ -304,7 +304,7 @@ DEOXYRIBOSE_PYRIMIDINE_TERMINAL_C5_ALL_FUNC_OF_TORSION_CHI_RESTRAINTS = [
     {
         'conditions': [],
         'name': 'deoxyribose_pyrimidine_terminal_C5==All=All',
-        'restraints': [   ['dist', "dC1'N1", ["C1'", 'N1'], None, None, None, None, "All-C1'-N1 or C1'-N9.joblib", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
-                          ['dist', "dC1'O4'", ["C1'", "O4'"], None, None, None, None, "All-C1'-O4'.joblib", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]]]
+        'restraints': [   ['dist', "dC1'N1", ["C1'", 'N1'], None, None, None, None, "All-C1'-N1 or C1'-N9.pickle", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]],
+                          ['dist', "dC1'O4'", ["C1'", "O4'"], None, None, None, None, "All-C1'-O4'.pickle", ['torsion_chi', ["O4'", "C1'", 'N1', 'C2']]]]
     }
 ]

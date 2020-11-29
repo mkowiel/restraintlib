@@ -6,8 +6,8 @@ import math
 import os
 import sys
 from collections import defaultdict
+import pickle
 import six
-from sklearn.externals import joblib
 
 from .atom import Atom
 from .lib import PO4
@@ -152,7 +152,8 @@ class ConditionalRestraintItem(object):
         self._sigma = sigma
         self._regressor = None
         if value_function_name:
-            self._regressor = joblib.load(self.regressor_absolute_path(value_function_name))
+            with open(self.regressor_absolute_path(value_function_name), 'r') as p_file:
+                self._regressor = pickle.load(p_file)
 
         self.value_param_name = None
         self.value_param_atoms = None

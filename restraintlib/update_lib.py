@@ -2,7 +2,6 @@ import math
 import os
 import pickle
 
-import joblib
 import pandas as pd
 from sklearn.linear_model import BayesianRidge
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -10,10 +9,6 @@ from sklearn.gaussian_process.kernels import WhiteKernel, ExpSineSquared
 from sklearn.metrics import mean_squared_error, median_absolute_error, r2_score, mean_absolute_error
 
 __author__ = "Marcin Kowiel, Dariusz Brzezinski"
-
-
-def serialize_joblib(model, filename):
-    joblib.dump(model, filename)
 
 
 def serialize_pickle(model, filename):
