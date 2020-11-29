@@ -152,7 +152,7 @@ class ConditionalRestraintItem(object):
         self._sigma = sigma
         self._regressor = None
         if value_function_name:
-            with open(self.regressor_absolute_path(value_function_name), 'r') as p_file:
+            with open(self.regressor_absolute_path(value_function_name), 'rb') as p_file:
                 self._regressor = pickle.load(p_file)
 
         self.value_param_name = None

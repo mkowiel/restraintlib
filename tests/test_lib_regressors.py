@@ -13,7 +13,7 @@ class LibRegressorsTestCase(TestCase):
         self.assertAlmostEqual(value[0], 1.4874497)
         self.assertAlmostEqual(sigma[0], 0.011119879)
 
-        with open("restraintlib/lib/regressors/All-C1'-N1 or C1'-N9.pickle", 'r') as p_file:
+        with open("restraintlib/lib/regressors/All-C1'-N1 or C1'-N9.pickle", 'rb') as p_file:
             regressor = pickle.load(p_file)
         value, sigma = regressor.predict([[10.0]], return_std=True)
         self.assertAlmostEqual(value[0], 1.4874497)
@@ -24,7 +24,7 @@ class LibRegressorsTestCase(TestCase):
         for name in names:
             print(name)
             regressor_joblib = joblib.load(name)
-            with open(name.replace('joblib', 'pickle'), 'r') as p_file:
+            with open(name.replace('joblib', 'pickle'), 'rb') as p_file:
                 regressor_pickle = pickle.load(p_file)
 
             for x in [5., 10., 22.5, 30., 60]:
