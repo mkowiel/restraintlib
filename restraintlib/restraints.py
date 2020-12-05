@@ -40,12 +40,16 @@ VERSION = '2019.11.1'
 class DistanceMeasure(object):
     # use slots to minimize memory footprint
     __slots__ = (
-        'measure', 'restraint_names',
+        'measure_name', 'measure', 'restraint_names',
     )
 
     def __init__(self, measure, restraint_names):
+        self.measure_name = measure
         self.measure = getattr(self, measure)
         self.restraint_names = restraint_names
+
+    def __str__(self):
+        return self.measure_name + " " + self.restraint_names
 
     @classmethod
     def euclidean(cls, vector1, vector2):
@@ -456,6 +460,8 @@ class ConditionalRestraintList(list):
             distance = distance_measure.distance(getattr(conditional_restraint, variable), atoms)
             #if "PO4==AS" in conditional_restraint.name:
             #    print(i, conditional_restraint.name, distance, [str(atom) for atom in atoms.values()])
+            #if distance is None:
+            #    print(conditional_restraint, variable, [str(atom) for atom in atoms.values()], distance, distance_measure)
             if distance < min_distance:
                 min_distance = distance
                 min_distance_i = i
