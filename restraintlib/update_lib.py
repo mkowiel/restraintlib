@@ -13,7 +13,7 @@ __author__ = "Marcin Kowiel, Dariusz Brzezinski"
 
 def serialize_pickle(model, filename):
     # if python3 use protocol 4 or highest, to be compatible with python2 we can use maximally protocol 2
-    with open(filename, 'w') as pickle_file:
+    with open(filename, 'wb') as pickle_file:
         pickle.dump(model, pickle_file, protocol=2)
 
 

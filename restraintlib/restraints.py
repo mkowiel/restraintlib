@@ -49,7 +49,7 @@ class DistanceMeasure(object):
         self.restraint_names = restraint_names
 
     def __str__(self):
-        return self.measure_name + " " + self.restraint_names
+        return self.measure_name + " " + str(self.restraint_names)
 
     @classmethod
     def euclidean(cls, vector1, vector2):
@@ -69,7 +69,7 @@ class DistanceMeasure(object):
         if len(vector1) == 0 or len(vector2) == 0:
             return None
         if len(vector1) != len(vector2):
-            raise Exception('uneven number of elements')
+            raise Exception('unequal number of elements')
 
         dist_sq_sum = 0.0
         for a, b in zip(vector1, vector2):
@@ -460,9 +460,7 @@ class ConditionalRestraintList(list):
             distance = distance_measure.distance(getattr(conditional_restraint, variable), atoms)
             #if "PO4==AS" in conditional_restraint.name:
             #    print(i, conditional_restraint.name, distance, [str(atom) for atom in atoms.values()])
-            #if distance is None:
-            #    print(conditional_restraint, variable, [str(atom) for atom in atoms.values()], distance, distance_measure)
-            if distance < min_distance:
+            if distance and distance < min_distance:
                 min_distance = distance
                 min_distance_i = i
 
