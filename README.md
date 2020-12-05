@@ -19,7 +19,7 @@ Bond length and angle restraints for DNA and RNA oligonucleotides.
 
 Scripts were tested with 
 
-* Python 2.7
+* Python 2.7, Python 3.7.9
 * cctbx [cctbx_project](https://github.com/cctbx/cctbx_project)
 * scikit-learn==0.20.3
 * numpy==1.15.4
@@ -51,6 +51,7 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
     
 4. Install library
 
+
 ## Option 2: manual installation
 
 Follow the installation instruction in the [cctbx_project](https://github.com/cctbx/cctbx_project)
@@ -66,3 +67,6 @@ Then install the library.
     ```bash  
     cctbx.python setup.py install
     ```
+# Test
+
+Execute `pytest` in the main directory
