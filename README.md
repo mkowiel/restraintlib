@@ -19,27 +19,28 @@ Bond length and angle restraints for DNA and RNA oligonucleotides.
 
 Scripts were tested with 
 
-* Python 2.7, Python 3.7.9
-* cctbx [cctbx_project](https://github.com/cctbx/cctbx_project)
+* Python 3.7
+* cctbx==2020.10 [cctbx_project](https://github.com/cctbx/cctbx_project)
 * scikit-learn==0.20.3
 * numpy==1.15.4
 
 # Installation
 
+Install cctbx with use of miniconda/anacona setup (Option 1) or manually (Option 2).
 It seems cctbx installation from pypi does not work at the moment (2020.11.27). 
-Intsall cctbx manually of from anacona cloud.
 
 ## Option 1: use anaconda setup
 
 1. Download Miniconda: [minicnda](https://docs.conda.io/en/latest/miniconda.html#linux-installers). 
 You can download for example https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
 2. Install Miniconda
 
     ```bash
     sh .\Miniconda3-latest-Linux-x86_64.sh
     ```
     
-3. Create environment (in the example with `Python3.7` and the `cctbx` env name)
+3. Create environment (in the example with `Python3.7` and the `cctbx` env name). 
 
     ```bash
     conda create -n cctbx python=3.7
@@ -50,6 +51,8 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
     ```
     
 4. Install library
+    
+    conda install -n cctbx . 
 
 
 ## Option 2: manual installation
@@ -70,3 +73,21 @@ Then install the library.
 # Test
 
 Execute `pytest` in the main directory
+
+# Generate functional restraints models.
+
+The scripts are compatible with python 2.7, however the models are seriazized
+(pickeld) so it might be compatible with python 2.7 or different `scikit-learn` version.
+It is not the big problem, it is possible to recreate the modes from raw data 
+(`restraintlib/data/combined_results.csv`). Install dependencies and execute:
+    
+    ```bash
+    python retrain_restraintlib.py
+    ```
+    
+or when installed manually
+
+    ```bash
+    cctbx.python retrain_restraintlib.py
+    ``` 
+    
