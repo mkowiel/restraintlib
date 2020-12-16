@@ -28,7 +28,7 @@ setup(
         'pytest',
     ],
     scripts=[
-        'restraintlib.py',
-        'retrain_restraintlib.py'
+        'restraintlib/restraintlib.py',
+        'restraintlib/retrain_restraintlib.py'
     ]
 )
