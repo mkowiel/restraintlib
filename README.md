@@ -31,16 +31,22 @@ It seems cctbx installation from pypi does not work at the moment (2020.11.27).
 
 ## Option 1: use anaconda setup
 
-1. Download Miniconda: [minicnda](https://docs.conda.io/en/latest/miniconda.html#linux-installers). 
+1. Clone repository or download sourcecode.
+
+    ```bash 
+    git clone https://github.com/mkowiel/restraintlib.git
+    ```
+
+2. Download Miniconda: [minicnda](https://docs.conda.io/en/latest/miniconda.html#linux-installers). 
 You can download for example https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 
-2. Install Miniconda
+3. Install Miniconda
 
     ```bash
     sh .\Miniconda3-latest-Linux-x86_64.sh
     ```
     
-3. Create environment (in the example with `Python3.7` and the `cctbx` env name). 
+4. Create environment (in the example with `Python3.7` and the `cctbx` env name). 
 
     ```bash
     conda create -n cctbx python=3.7
@@ -48,12 +54,15 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
     conda install -n cctbx -c conda-forge cctbx
     conda install -n cctbx -c conda-forge pytest
     conda install -n cctbx -c conda-forge scikit-learn==0.20.3
+    conda install -n cctbx -c conda-forge conda-build
     ```
     
 4. Install library
     
-    conda install -n cctbx . 
-
+    ```bash
+    conda-build . --python 3.7 -c conda-forge    
+    conda install -n cctbx -c local --offline restraintlib
+    ```
 
 ## Option 2: manual installation
 
