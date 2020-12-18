@@ -6,15 +6,15 @@ from six import StringIO
 from unittest import TestCase
 from unittest import expectedFailure
 
-from restraintlib.restraintlib import AllowedRestraintsConfig
-from restraintlib.restraintlib import RestrainLib
+from restraintlib.launcher import AllowedRestraintsConfig
+from restraintlib.launcher import RestraintLibLauncher
 from restraintlib.restraints import VERSION
 
 
 class RestrainLibTestCase(TestCase):
     def setUp(self):
         self.buffer = StringIO()
-        self.lib = RestrainLib(log_stream=self.buffer)
+        self.lib = RestraintLibLauncher(log_stream=self.buffer)
         self.pdb_3p4j = os.path.join(os.path.dirname(os.path.abspath(__file__)), '3p4j.pdb')
         self.pdb_1d8g = os.path.join(os.path.dirname(os.path.abspath(__file__)), '1d8g.pdb')
         self.pdb_ig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'IG.pdb')
@@ -524,7 +524,7 @@ class RestrainLibTestCase(TestCase):
         self.lib.produce_restraints(self.pdb_3p4j, 'P', self.restraints_config)
         data_pdb = self.buffer.getvalue()
         self.buffer = StringIO()
-        self.lib = RestrainLib(log_stream=self.buffer)
+        self.lib = RestraintLibLauncher(log_stream=self.buffer)
         self.lib.produce_restraints(self.mmcif_3p4j, 'P', self.restraints_config)
         data_cif = self.buffer.getvalue()
         data_pdb = [line for line in data_pdb.splitlines() if not line.startswith("#")]

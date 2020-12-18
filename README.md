@@ -79,6 +79,7 @@ Then install the library.
     ```bash  
     cctbx.python setup.py install
     ```
+   
 # Test
 
 Execute `pytest` in the main directory
@@ -89,14 +90,14 @@ The scripts are compatible with python 2.7, however the models are seriazized
 (pickeld) so it might be compatible with python 2.7 or different `scikit-learn` version.
 It is not the big problem, it is possible to recreate the modes from raw data 
 (`restraintlib/data/combined_results.csv`). Install dependencies and execute:
-    
-    ```bash
-    python retrain_restraintlib.py
-    ```
+
+```bash
+python retrain_restraintlib.py
+```
     
 or when installed manually
 
-    ```bash
-    cctbx.python retrain_restraintlib.py
-    ``` 
+```bash
+cctbx.python retrain_restraintlib.py
+```
     
