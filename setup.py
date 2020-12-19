@@ -12,7 +12,12 @@ setup(
     long_description=read('README.md'),
     author='Marcin Kowiel, Dariusz Brzezinski',
     url='https://github.com/mkowiel/restraintlib',
-    packages=['restraintlib'],
+    packages=[
+        'restraintlib',
+        'restraintlib.lib',
+        'restraintlib.lib.regressors',
+        'restraintlib.data',
+    ],
     license = "BSD",
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -28,7 +33,6 @@ setup(
         'pytest',
     ],
     scripts=[
-        'restraintlib/restraintlib.py',
-        'restraintlib/retrain_restraintlib.py'
+        'bin/restraintlib',
     ]
 )
