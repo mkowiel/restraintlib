@@ -4,7 +4,6 @@ from __future__ import print_function
 import iotbx.pdb
 import math
 import os
-import sys
 from collections import defaultdict
 import pickle
 import six
@@ -27,14 +26,19 @@ from .lib import ribose_purine_terminal_C5
 from .lib import ribose_pyrimidine
 from .lib import ribose_pyrimidine_terminal_C3
 from .lib import ribose_pyrimidine_terminal_C5
-from .printer import CsvPrinter
-from .printer import PhenixPrinter
-from .printer import RefmacPrinter
-from .printer import ShelxPrinter
 
 from cctbx.array_family import flex
 
 VERSION = '2019.11.1'
+
+
+def regressor_absolute_path(filename):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), 'lib', 'regressors', filename)
+
+
+def load_function(function_name):
+    with open(regressor_absolute_path(function_name), 'rb') as p_file:
+        return pickle.load(p_file)
 
 
 class DistanceMeasure(object):
@@ -156,8 +160,7 @@ class ConditionalRestraintItem(object):
         self._sigma = sigma
         self._regressor = None
         if value_function_name:
-            with open(self.regressor_absolute_path(value_function_name), 'rb') as p_file:
-                self._regressor = pickle.load(p_file)
+            self._regressor = load_function(value_function_name)
 
         self.value_param_name = None
         self.value_param_atoms = None
@@ -169,9 +172,6 @@ class ConditionalRestraintItem(object):
 
         self.value_dist = value_dist
         self.sigma_dist = sigma_dist
-
-    def regressor_absolute_path(self, value_function_filename):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)), 'lib', 'regressors', value_function_filename)
 
     def calc_param(self, param_atoms):
         if self.value_param_name == 'tau_max':
