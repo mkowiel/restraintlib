@@ -1,0 +1,20 @@
+# MANIFEST.in
+#
+# This tells distutils what files to distribute.
+
+include LICENSE
+include README.md
+include changelog.txt
+
+include MANIFEST.in
+
+recursive-include restraintlib/*.py
+recursive-include restraintlib/*.pickle
+recursive-include restraintlib/*.csv    
+
+recursive-include tests/*.py
+recursive-include tests/*.pdb
+recursive-include tests/*.cif
+
+# e.g. from running the unit tests, or PyPy, etc
+global-exclude *.pyc *.pyo *.py{} *.py-e
