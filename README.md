@@ -50,16 +50,17 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
 
     ```bash
     conda create -n cctbx python=3.7
-    conda activate cctbx
     conda install -n cctbx -c conda-forge cctbx
     conda install -n cctbx -c conda-forge pytest
     conda install -n cctbx -c conda-forge scikit-learn==0.20.3
-    conda install -n cctbx -c conda-forge conda-build
+    conda install -c conda-forge conda-build
     ```
     
 4. Install library
     
     ```bash
+    # make sure you build on base environment
+    conda activate base
     conda-build . --python 3.7 -c conda-forge    
     conda install -n cctbx -c local --offline restraintlib
     ```
@@ -79,6 +80,13 @@ Then install the library.
     ```bash  
     cctbx.python setup.py install
     ```
+
+# Run
+
+```bash
+    conda activate cctbx
+    restraintlib <printer_format> <input_file> <output_file>
+```
    
 # Test
 
