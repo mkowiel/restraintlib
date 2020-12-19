@@ -18,6 +18,7 @@ setup(
         'restraintlib.lib.regressors',
         'restraintlib.data',
     ],
+    include_package_data=True,  # done via MANIFEST.in under setuptools
     license = "BSD",
     classifiers=[
         "Development Status :: 3 - Alpha",
