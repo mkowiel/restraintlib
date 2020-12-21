@@ -27,6 +27,15 @@ requirements:
 test:
   imports:
     - restraintlib
+  requires:
+    - pytest
+  source_files:
+    - tests/*.py
+    - tests/*.cif
+    - tests/*.pdb
+  commands:
+    - pytest
+
 
 about:
   home: https://github.com/mkowiel/restraintlib
