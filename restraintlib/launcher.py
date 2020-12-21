@@ -1,15 +1,16 @@
 from __future__ import print_function
 
+import argparse
 import sys
 import six
 
-from .printer import CsvPrinter
-from .printer import ShelxPrinter
-from .printer import PhenixPrinter
-from .printer import RefmacPrinter
+from restraintlib.printer import CsvPrinter
+from restraintlib.printer import ShelxPrinter
+from restraintlib.printer import PhenixPrinter
+from restraintlib.printer import RefmacPrinter
 
-from .restraints import load_restraints_lib
-from .restraints import parse_pdb
+from restraintlib.restraints import load_restraints_lib
+from restraintlib.restraints import parse_pdb
 
 
 class AllowedRestraintsConfig(object):
@@ -69,21 +70,16 @@ class RestraintLibLauncher(object):
 
 
 def main():
-    if len(sys.argv) > 3:
-        printer = sys.argv[1]
-        in_pdb = sys.argv[2]
-        out_filename = sys.argv[3]
-    elif len(sys.argv) > 2:
-        printer = 'Refmac'
-        in_pdb = sys.argv[1]
-        out_filename = sys.argv[2]
-    else:
-        print('usage: restraints.py [printer] in.pdb restraints.txt')
-        print('       Printer is one of Refmac, Phenix, Shelxl, Csv. Default=Refmac')
-        printer = 'Refmac'
-        in_pdb = 'in.pdb'
-        out_filename = 'restraints.txt'
-    printer = printer.lower()
+    parser = argparse.ArgumentParser(description='Generate olgonucleotides restraints for pdb or mmcif file')
+    parser.add_argument('printer', type=str, choices=['refmac', 'phenix', 'shelxl', 'csv'], default='refmac',
+                        help='Restraint output format')
+    parser.add_argument('in_filename', type=str, default='in.pdb', help='Input file')
+    parser.add_argument('out_filename', type=str, default='restraints.txt', help='Output restraints file')
+
+    args = parser.parse_args()
+    printer = args.printer.lower()
+    in_pdb = args.in_filename
+    out_filename = args.out_filename
 
     if printer == 'refmac':
         printer_cls = RefmacPrinter
@@ -94,11 +90,12 @@ def main():
     elif printer == 'csv':
         printer_cls = CsvPrinter
     else:
-        print("Unknown printer {}, should be one of Refmac, Phenix, Shelxl".format(printer))
+        print("Unknown printer {}, should be one of refmac, phenix, shelxl, csv".format(printer))
         return
 
     restraint_list = load_restraints_lib()
     parse_pdb(in_pdb, restraint_list, restraint_list, out_filename, printer_cls)
 
 
-
+if __name__ == "__main__":
+    main()

@@ -8,24 +8,24 @@ from collections import defaultdict
 import pickle
 import six
 
-from .atom import Atom
-from .lib import PO4
-from .lib import PO4_terminal_C3
-from .lib import PO4_terminal_C5
-from .lib import deoxyribose_purine
-from .lib import deoxyribose_purine_terminal_C3
-from .lib import deoxyribose_purine_terminal_C5
-from .lib import deoxyribose_pyrimidine
-from .lib import deoxyribose_pyrimidine_terminal_C3
-from .lib import deoxyribose_pyrimidine_terminal_C5
-from .lib import nucleic_acid_bases
-from .lib import nucleic_acid_isobases
-from .lib import ribose_purine
-from .lib import ribose_purine_terminal_C3
-from .lib import ribose_purine_terminal_C5
-from .lib import ribose_pyrimidine
-from .lib import ribose_pyrimidine_terminal_C3
-from .lib import ribose_pyrimidine_terminal_C5
+from restraintlib.atom import Atom
+from restraintlib.lib import PO4
+from restraintlib.lib import PO4_terminal_C3
+from restraintlib.lib import PO4_terminal_C5
+from restraintlib.lib import deoxyribose_purine
+from restraintlib.lib import deoxyribose_purine_terminal_C3
+from restraintlib.lib import deoxyribose_purine_terminal_C5
+from restraintlib.lib import deoxyribose_pyrimidine
+from restraintlib.lib import deoxyribose_pyrimidine_terminal_C3
+from restraintlib.lib import deoxyribose_pyrimidine_terminal_C5
+from restraintlib.lib import nucleic_acid_bases
+from restraintlib.lib import nucleic_acid_isobases
+from restraintlib.lib import ribose_purine
+from restraintlib.lib import ribose_purine_terminal_C3
+from restraintlib.lib import ribose_purine_terminal_C5
+from restraintlib.lib import ribose_pyrimidine
+from restraintlib.lib import ribose_pyrimidine_terminal_C3
+from restraintlib.lib import ribose_pyrimidine_terminal_C5
 
 from cctbx.array_family import flex
 
