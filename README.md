@@ -62,7 +62,7 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
     # make sure you build on base environment
     conda activate base
     conda-build . --python 3.7 -c conda-forge    
-    conda install -n cctbx -c local --offline restraintlib
+    conda install --force-reinstall -n cctbx -c local --offline restraintlib
     ```
 
 ## Option 2: manual installation

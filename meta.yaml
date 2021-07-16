@@ -1,6 +1,6 @@
 package:
   name: restraintlib
-  version: 2019.11.1
+  version: 2021.07.1
 
 source:
   git_url: https://github.com/mkowiel/restraintlib.git

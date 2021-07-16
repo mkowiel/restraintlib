@@ -4,11 +4,11 @@ import argparse
 import sys
 import six
 
+from restraintlib.printer import BusterPrinter
 from restraintlib.printer import CsvPrinter
 from restraintlib.printer import ShelxPrinter
 from restraintlib.printer import PhenixPrinter
 from restraintlib.printer import RefmacPrinter
-
 from restraintlib.restraints import load_restraints_lib
 from restraintlib.restraints import parse_pdb
 
@@ -51,6 +51,8 @@ class RestraintLibLauncher(object):
             printer_cls = ShelxPrinter
         elif printer == 'C':
             printer_cls = CsvPrinter
+        elif printer == 'B':
+            printer_cls = BusterPrinter
         else:
             printer_cls = RefmacPrinter
 
@@ -71,7 +73,7 @@ class RestraintLibLauncher(object):
 
 def main():
     parser = argparse.ArgumentParser(description='Generate olgonucleotides restraints for pdb or mmcif file')
-    parser.add_argument('printer', type=str, choices=['refmac', 'phenix', 'shelxl', 'csv'], default='refmac',
+    parser.add_argument('printer', type=str, choices=['refmac', 'phenix', 'shelxl', 'buster', 'csv'], default='refmac',
                         help='Restraint output format')
     parser.add_argument('in_filename', type=str, default='in.pdb', help='Input file')
     parser.add_argument('out_filename', type=str, default='restraints.txt', help='Output restraints file')
@@ -89,8 +91,10 @@ def main():
         printer_cls = ShelxPrinter
     elif printer == 'csv':
         printer_cls = CsvPrinter
+    elif printer == 'buster':
+        printer_cls = BusterPrinter
     else:
-        print("Unknown printer {}, should be one of refmac, phenix, shelxl, csv".format(printer))
+        print("Unknown printer {}, should be one of refmac, phenix, shelxl, buster, csv".format(printer))
         return
 
     restraint_list = load_restraints_lib()

@@ -445,6 +445,83 @@ class RefmacPrinter(PrinterBase):
         return "\n".join(lines)
 
 
+class BusterPrinter(PrinterBase):
+
+    @classmethod
+    def _get_alt_loc(cls, atom):
+        return '.{}'.format(atom.alt_loc) if atom.alt_loc != '' else ''
+
+    @classmethod
+    def _comment(cls, restraint):
+        if restraint.condition_name is not None and restraint.name is not None:
+            if restraint.type == 'angle':
+                return '# Restraint {} {} {} {:.1f} {:.1f}'.format(
+                    restraint.condition_name, restraint.type, restraint.name, restraint.value, restraint.sigma)
+            return '# Restraint {} {} {} {:.3f} {:.3f}'.format(
+                restraint.condition_name, restraint.type, restraint.name, restraint.value, restraint.sigma)
+        return ''
+
+    @classmethod
+    def get_dist(cls, restraint, all_restraints):
+        atom0 = restraint.atoms[0]
+        atom1 = restraint.atoms[1]
+
+        lines = []
+        comment = cls._comment(restraint)
+        if comment != '':
+            lines.append(comment)
+        
+        line = "NOTE BUSTER_DISTANCE ={:.3f} {:.3f} {}|{}:{}{} {}|{}:{}{}".format(
+            restraint.value,
+            restraint.sigma,
+            
+            atom0.chain_id,
+            atom0.res_id,
+            atom0.atom_name,
+            cls._get_alt_loc(atom0),
+
+            atom1.chain_id,
+            atom1.res_id,
+            atom1.atom_name,
+            cls._get_alt_loc(atom1),
+        )
+        lines.append(line)
+        return "\n".join(lines)
+
+    @classmethod
+    def get_angle(cls, restraint, all_restraints):
+        atom0 = restraint.atoms[0]
+        atom1 = restraint.atoms[1]
+        atom2 = restraint.atoms[2]
+
+        lines = []
+        comment = cls._comment(restraint)
+        if comment != '':
+            lines.append(comment)
+
+        line = "NOTE BUSTER_UTILANGLE {:.1f} {:.1f} {}|{}:{}{} {}|{}:{}{} {}|{}:{}{}".format(
+            restraint.value,
+            restraint.sigma,
+
+            atom0.chain_id,
+            atom0.res_id,
+            atom0.atom_name,
+            cls._get_alt_loc(atom0),
+
+            atom1.chain_id,
+            atom1.res_id,
+            atom1.atom_name,
+            cls._get_alt_loc(atom1),
+
+            atom2.chain_id,
+            atom2.res_id,
+            atom2.atom_name,
+            cls._get_alt_loc(atom2),
+        )
+        lines.append(line)
+        return "\n".join(lines)
+
+
 class CsvPrinter(PrinterBase):
 
     @classmethod

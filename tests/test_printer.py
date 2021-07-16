@@ -6,6 +6,7 @@ from restraintlib.printer import PhenixPrinter
 from restraintlib.printer import RefmacPrinter
 from restraintlib.printer import ShelxPrinter
 from restraintlib.printer import CsvPrinter
+from restraintlib.printer import BusterPrinter
 from restraintlib.restraints import Restraint
 from restraintlib.restraints import load_restraints_lib
 
@@ -201,6 +202,49 @@ class CsvPrinterTestCase(PrinterTestCase):
 
     def test_header(self):
         self.assertNotEqual(self.printer.header(), "")
+
+    def test_footer(self):
+        self.assertEqual(self.printer.footer(), "")
+
+    def test_get_angle(self):
+        angle_text = self.printer.get_angle(self.restraints[0], self.restraints)
+
+        for line in self.expected_lines_angle:
+            self.assertIn(line, angle_text)
+
+    def test_get_dist(self):
+        dist = self.printer.get_dist(self.restraints[1], self.restraints)
+
+        for line in self.expected_lines_dist:
+            self.assertIn(line, dist)
+
+    def test_print_restraints(self):
+        restraints_lines = self.printer.print_restraints(self.restraints, self.allowed_restraints)
+
+        expected_lines = self.expected_lines_angle + self.expected_lines_dist
+
+        for line in expected_lines:
+            self.assertIn(line, restraints_lines)
+
+
+class BusterPrinterTestCase(PrinterTestCase):
+
+    def setUp(self):
+        super(BusterPrinterTestCase, self).setUp()
+        self.printer = BusterPrinter()
+
+        self.expected_lines_angle = [
+            '# Restraint PO4==AA_0 angle aO1O2 117.6 1.2',
+            'NOTE BUSTER_UTILANGLE 117.6 1.2 A|100:OP1.A A|100:P.A A|100:OP2.A'
+        ]
+
+        self.expected_lines_dist = [
+            '# Restraint PO4==AA_0 dist dO1P4 1.487 0.01',
+            'NOTE BUSTER_DISTANCE =1.487 0.010 A|100:OP1.A A|100:P.A'
+        ]
+
+    def test_header(self):
+        self.assertEqual(self.printer.header(), "")
 
     def test_footer(self):
         self.assertEqual(self.printer.footer(), "")

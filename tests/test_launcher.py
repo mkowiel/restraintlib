@@ -483,6 +483,11 @@ class RestrainLibTestCase(TestCase):
         data = self.buffer.getvalue()
         self.assert_3p4j(data)
 
+    def test_produce_restraints_buster_3p4j_pdb(self):
+        self.lib.produce_restraints(self.pdb_3p4j, 'B', self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assert_3p4j(data)
+
     def test_produce_restraints_phenix_3p4j_mmcif(self):
         self.lib.produce_restraints(self.mmcif_3p4j, 'P', self.restraints_config)
         data = self.buffer.getvalue()
@@ -499,6 +504,11 @@ class RestrainLibTestCase(TestCase):
         data = self.buffer.getvalue()
         self.assert_3p4j(data)
 
+    def test_produce_restraints_buster_3p4j_mmcif(self):
+        self.lib.produce_restraints(self.mmcif_3p4j, 'B', self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assert_3p4j(data)
+
     def test_produce_restraints_phenix_1d8g_pdb(self):
         self.lib.produce_restraints(self.pdb_1d8g, 'P', self.restraints_config)
         data = self.buffer.getvalue()
@@ -512,6 +522,11 @@ class RestrainLibTestCase(TestCase):
 
     def test_produce_restraints_refmac_1d8g_pdb(self):
         self.lib.produce_restraints(self.pdb_1d8g, 'R', self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assert_1d8g(data)
+    
+    def test_produce_restraints_buster_1d8g_pdb(self):
+        self.lib.produce_restraints(self.pdb_1d8g, 'B', self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_1d8g(data)
 

@@ -29,7 +29,7 @@ from restraintlib.lib import ribose_pyrimidine_terminal_C5
 
 from cctbx.array_family import flex
 
-VERSION = '2019.11.1'
+VERSION = '2021.07.1'
 
 
 def regressor_absolute_path(filename):
