@@ -75,8 +75,8 @@ def main():
     parser = argparse.ArgumentParser(description='Generate olgonucleotides restraints for pdb or mmcif file')
     parser.add_argument('printer', type=str, choices=['refmac', 'phenix', 'shelxl', 'buster', 'csv'], default='refmac',
                         help='Restraint output format')
-    parser.add_argument('--keep_orginal_sigma', type=bool, action='store_true', help='keep original sigma values',
-                        description='Keep sigma values calulated from the CSD data, without the flag sigma values will be program specific')
+    parser.add_argument('-k', '--keep_orginal_sigma', type=bool, action='store_true', default=False, 
+                        help='Keep original CSD sigma values, instead of program specific values')
     parser.add_argument('in_filename', type=str, default='in.pdb', help='Input file')
     parser.add_argument('out_filename', type=str, default='restraints.txt', help='Output restraints file')
 
