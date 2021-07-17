@@ -75,26 +75,26 @@ def main():
     parser = argparse.ArgumentParser(description='Generate olgonucleotides restraints for pdb or mmcif file')
     parser.add_argument('printer', type=str, choices=['refmac', 'phenix', 'shelxl', 'buster', 'csv'], default='refmac',
                         help='Restraint output format')
-    parser.add_argument('keep_orginal_sigma', action='store_true', 
+    parser.add_argument('--keep_orginal_sigma', type=bool, action='store_true', 
                         help='Keep sigma values calulated from the CSD data, without the flag sigma values will be program specific')
     parser.add_argument('in_filename', type=str, default='in.pdb', help='Input file')
     parser.add_argument('out_filename', type=str, default='restraints.txt', help='Output restraints file')
 
     args = parser.parse_args()
-    printer = args.printer.lower()
+    printer_name = args.printer.lower()
     in_pdb = args.in_filename
     out_filename = args.out_filename
     keep_orginal_sigma = args.keep_orginal_sigma
 
-    if printer == 'refmac':
+    if printer_name == 'refmac':
         printer = RefmacPrinter(not keep_orginal_sigma)
-    elif printer == 'phenix':
+    elif printer_name == 'phenix':
         printer = PhenixPrinter(not keep_orginal_sigma)
-    elif printer == 'shelxl':
+    elif printer_name == 'shelxl':
         printer = ShelxPrinter(not keep_orginal_sigma)
-    elif printer == 'csv':
+    elif printer_name == 'csv':
         printer = CsvPrinter(not keep_orginal_sigma)
-    elif printer == 'buster':
+    elif printer_name == 'buster':
         printer = BusterPrinter(not keep_orginal_sigma)
     else:
         print("Unknown printer {}, should be one of refmac, phenix, shelxl, buster, csv".format(printer))

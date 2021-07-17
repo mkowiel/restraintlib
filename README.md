@@ -50,10 +50,10 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
 
     ```bash
     conda create -n cctbx python=3.7
-    conda install --force-reinstall -n cctbx -c conda-forge cctbx
+    conda install --force-reinstall -n cctbx -c conda-forge cctbx-base
     conda install --force-reinstall -n cctbx -c conda-forge pytest
     conda install --force-reinstall -n cctbx -c conda-forge scikit-learn==0.20.3
-    conda install -c conda-forge conda-build
+    conda install -c conda-forge conda-build conda-verify
     ```
     
 4. Install library
