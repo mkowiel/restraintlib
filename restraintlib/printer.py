@@ -11,6 +11,9 @@ __author__ = "Marcin Kowiel, Dariusz Brzezinski"
 
 class PrinterBase(object):
 
+    def __init__(self, override_sigma=True):
+        self.override_sigma = override_sigma
+
     @classmethod
     def validate(cls, hierarchy):
         return None
@@ -23,16 +26,19 @@ class PrinterBase(object):
     def footer(cls):
         return ''
 
-    @classmethod
-    def get_angle(cls, restraint, all_restraints):
+    def angle_sigma_value(self, value):
+        return value
+
+    def get_angle(self, restraint, all_restraints):
         return ''
 
-    @classmethod
-    def get_dist(cls, restraint, all_restraints):
+    def dist_sigma_value(self, value):
+        return value
+
+    def get_dist(self, restraint, all_restraints):
         return ''
 
-    @classmethod
-    def print_restraints(cls, restraints, allowed_restraint_groups):
+    def print_restraints(self, restraints, allowed_restraint_groups):
         lines = []
 
         allowed_condition_name = [
@@ -46,9 +52,9 @@ class PrinterBase(object):
             if restraint.condition_name in allowed_condition_name:
                 line = ''
                 if restraint.type == 'angle':
-                    line = cls.get_angle(restraint, restraints)
+                    line = self.get_angle(restraint, restraints)
                 elif restraint.type == 'dist':
-                    line = cls.get_dist(restraint, restraints)
+                    line = self.get_dist(restraint, restraints)
 
                 # usuwanie duplikujacych sie wynikow dla alt_loc (blank-blank) w przypadku gdy mamy A i B
                 if line not in lines:
@@ -169,14 +175,13 @@ class ShelxPrinter(PrinterBase):
             rem = ''
         return resid, alt_code, rem
 
-    @classmethod
-    def get_dist(cls, restraint, all_restraints):
+    def get_dist(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
 
-        resid_0, alt_code_0, rem_0 = cls._get_resid_altcode_rem(atom0)
-        resid_1, alt_code_1, rem_1 = cls._get_resid_altcode_rem(atom1)
-        comment = cls._comment(restraint)
+        resid_0, alt_code_0, rem_0 = self._get_resid_altcode_rem(atom0)
+        resid_1, alt_code_1, rem_1 = self._get_resid_altcode_rem(atom1)
+        comment = self._comment(restraint)
 
         lines = []
         for rem in (rem_0, rem_1, comment):
@@ -280,14 +285,13 @@ class ShelxPrinter(PrinterBase):
 
         return dist13_plus-dist13_minus
 
-    @classmethod
-    def get_angle(cls, restraint, all_restraints):
+    def get_angle(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom2 = restraint.atoms[2]
 
-        resid_0, alt_code_0, rem_0 = cls._get_resid_altcode_rem(atom0)
-        resid_2, alt_code_2, rem_2 = cls._get_resid_altcode_rem(atom2)
-        comment = cls._comment(restraint)
+        resid_0, alt_code_0, rem_0 = self._get_resid_altcode_rem(atom0)
+        resid_2, alt_code_2, rem_2 = self._get_resid_altcode_rem(atom2)
+        comment = self._comment(restraint)
 
         lines = []
         for rem in (rem_0, rem_2, comment):
@@ -296,8 +300,8 @@ class ShelxPrinter(PrinterBase):
                     lines.append(line)
 
         lines.append('DANG {:.3f} {:.3f} {}_{}{} {}_{}{}'.format(
-            cls._val_deg_to_dist(restraint, all_restraints),
-            cls._sig_deg_to_dist(restraint, all_restraints),
+            self._val_deg_to_dist(restraint, all_restraints),
+            self._sig_deg_to_dist(restraint, all_restraints),
             atom0.atom_name,
             resid_0,
             alt_code_0,
@@ -331,8 +335,24 @@ class PhenixPrinter(PrinterBase):
             cls._get_alt_loc(atom),
         )
 
-    @classmethod
-    def _prepare_restraint(cls, kind, digit_after_dot, restraint):
+    def angle_sigma_value(self, value):
+        """ Default sigma for angles in PHENIX is 3.0"""
+        return 3.0 if self.override_sigma else value
+
+    def dist_sigma_value(self, value):
+        """ Default sigma for bond distances in PHENIX is 0.020"""
+        return 0.020 if self.override_sigma else value
+
+    def action_type(self, kind, restraint):
+        action = 'change'
+        if kind == 'bond':
+            atom_name_0 = restraint.atoms[0].atom_name
+            atom_name_1 = restraint.atoms[1].atom_name
+            if (atom_name_0 == "O3'" and atom_name_1 == "C3'") or (atom_name_0 == "C3'" and atom_name_1 == "O3'"):
+                action = 'add'
+        return action 
+
+    def _prepare_restraint(self, kind, digit_after_dot, restraint):
         lines = []
         if restraint.condition_name is not None and restraint.name is not None:
             lines.append(
@@ -342,26 +362,25 @@ class PhenixPrinter(PrinterBase):
                 )
             )
         lines.append("  {} {{".format(kind))
-        action = 'add' if kind == 'bond' else 'change'
+        action = self.action_type(kind, restraint)
         lines.append("    action = *{}".format(action))
         for i_atom, atom in enumerate(restraint.atoms, start=1):
-            lines.append("    atom_selection_{} = {}".format(i_atom, cls._atom_sel(atom)))
+            lines.append("    atom_selection_{} = {}".format(i_atom, self._atom_sel(atom)))
         #lines.append("    symmetry_operation = None")
         keyword_ideal = 'distance_ideal' if kind == 'bond' else 'angle_ideal'
         lines.append("    {} = {{:.{}f}}".format(keyword_ideal, digit_after_dot).format(restraint.value))
-        lines.append("    sigma = {{:.{}f}}".format(digit_after_dot).format(restraint.sigma))
+        sigma = self.dist_sigma_value(restraint.sigma) if kind == 'bond' else self.angle_sigma_value(restraint.sigma)
+        lines.append("    sigma = {{:.{}f}}".format(digit_after_dot).format(sigma))
         if kind == 'bond':
             lines.append("    slack = None")
         lines.append("  }")
         return '\n'.join(lines)
 
-    @classmethod
-    def get_dist(cls, restraint, all_restraints):
-        return cls._prepare_restraint('bond', 3, restraint)
+    def get_dist(self, restraint, all_restraints):
+        return self._prepare_restraint('bond', 3, restraint)
 
-    @classmethod
-    def get_angle(cls, restraint, all_restraints):
-        return cls._prepare_restraint('angle', 1, restraint)
+    def get_angle(self, restraint, all_restraints):
+        return self._prepare_restraint('angle', 1, restraint)
 
 
 class RefmacPrinter(PrinterBase):
@@ -380,13 +399,12 @@ class RefmacPrinter(PrinterBase):
                 restraint.condition_name, restraint.type, restraint.name, restraint.value, restraint.sigma)
         return ''
 
-    @classmethod
-    def get_dist(cls, restraint, all_restraints):
+    def get_dist(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
 
         lines = []
-        comment = cls._comment(restraint)
+        comment = self._comment(restraint)
         if comment != '':
             lines.append(comment)
 
@@ -395,12 +413,12 @@ class RefmacPrinter(PrinterBase):
             atom0.chain_id,
             atom0.res_id,
             atom0.atom_name,
-            cls._get_alt_loc(atom0),
+            self._get_alt_loc(atom0),
 
             atom1.chain_id,
             atom1.res_id,
             atom1.atom_name,
-            cls._get_alt_loc(atom1),
+            self._get_alt_loc(atom1),
 
             restraint.value,
             restraint.sigma,
@@ -409,14 +427,13 @@ class RefmacPrinter(PrinterBase):
         lines.append(line)
         return "\n".join(lines)
 
-    @classmethod
-    def get_angle(cls, restraint, all_restraints):
+    def get_angle(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
         atom2 = restraint.atoms[2]
 
         lines = []
-        comment = cls._comment(restraint)
+        comment = self._comment(restraint)
         if comment != '':
             lines.append(comment)
 
@@ -425,17 +442,17 @@ class RefmacPrinter(PrinterBase):
             atom0.chain_id,
             atom0.res_id,
             atom0.atom_name,
-            cls._get_alt_loc(atom0),
+            self._get_alt_loc(atom0),
 
             atom1.chain_id,
             atom1.res_id,
             atom1.atom_name,
-            cls._get_alt_loc(atom1),
+            self._get_alt_loc(atom1),
 
             atom2.chain_id,
             atom2.res_id,
             atom2.atom_name,
-            cls._get_alt_loc(atom2),
+            self._get_alt_loc(atom2),
 
             restraint.value,
             restraint.sigma,
@@ -461,62 +478,68 @@ class BusterPrinter(PrinterBase):
                 restraint.condition_name, restraint.type, restraint.name, restraint.value, restraint.sigma)
         return ''
 
-    @classmethod
-    def get_dist(cls, restraint, all_restraints):
+    def angle_sigma_value(self, value):
+        """ Default sigma for angles in BUSTER is 1.5"""
+        return 1.5 if self.override_sigma else value
+
+    def dist_sigma_value(self, value):
+        """ Default sigma for bond distances in BUSTER is 0.020"""
+        return 0.020 if self.override_sigma else value
+
+    def get_dist(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
 
         lines = []
-        comment = cls._comment(restraint)
+        comment = self._comment(restraint)
         if comment != '':
             lines.append(comment)
         
         line = "NOTE BUSTER_DISTANCE ={:.3f} {:.3f} {}|{}:{}{} {}|{}:{}{}".format(
             restraint.value,
-            restraint.sigma,
+            self.dist_sigma_value(restraint.sigma),
             
             atom0.chain_id,
             atom0.res_id,
             atom0.atom_name,
-            cls._get_alt_loc(atom0),
+            self._get_alt_loc(atom0),
 
             atom1.chain_id,
             atom1.res_id,
             atom1.atom_name,
-            cls._get_alt_loc(atom1),
+            self._get_alt_loc(atom1),
         )
         lines.append(line)
         return "\n".join(lines)
 
-    @classmethod
-    def get_angle(cls, restraint, all_restraints):
+    def get_angle(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
         atom2 = restraint.atoms[2]
 
         lines = []
-        comment = cls._comment(restraint)
+        comment = self._comment(restraint)
         if comment != '':
             lines.append(comment)
 
         line = "NOTE BUSTER_UTILANGLE {:.1f} {:.1f} {}|{}:{}{} {}|{}:{}{} {}|{}:{}{}".format(
             restraint.value,
-            restraint.sigma,
+            self.angle_sigma_value(restraint.sigma),
 
             atom0.chain_id,
             atom0.res_id,
             atom0.atom_name,
-            cls._get_alt_loc(atom0),
+            self._get_alt_loc(atom0),
 
             atom1.chain_id,
             atom1.res_id,
             atom1.atom_name,
-            cls._get_alt_loc(atom1),
+            self._get_alt_loc(atom1),
 
             atom2.chain_id,
             atom2.res_id,
             atom2.atom_name,
-            cls._get_alt_loc(atom2),
+            self._get_alt_loc(atom2),
         )
         lines.append(line)
         return "\n".join(lines)
@@ -532,8 +555,7 @@ class CsvPrinter(PrinterBase):
     def header(cls):
         return 'type,condition_name,restraint_name,chain1,resi1,atom1,altloc1,chain2,resi2,atom2,altloc2,chain3,resi3,atom3,altloc3,value,sigma'
 
-    @classmethod
-    def get_dist(cls, restraint, all_restraints):
+    def get_dist(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
 
@@ -546,12 +568,12 @@ class CsvPrinter(PrinterBase):
             atom0.chain_id,
             atom0.res_id,
             atom0.atom_name,
-            cls._get_alt_loc(atom0),
+            self._get_alt_loc(atom0),
 
             atom1.chain_id,
             atom1.res_id,
             atom1.atom_name,
-            cls._get_alt_loc(atom1),
+            self._get_alt_loc(atom1),
 
             '', '', '', '',
 
@@ -561,8 +583,7 @@ class CsvPrinter(PrinterBase):
 
         return line
 
-    @classmethod
-    def get_angle(cls, restraint, all_restraints):
+    def get_angle(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
         atom2 = restraint.atoms[2]
@@ -576,17 +597,17 @@ class CsvPrinter(PrinterBase):
             atom0.chain_id,
             atom0.res_id,
             atom0.atom_name,
-            cls._get_alt_loc(atom0),
+            self._get_alt_loc(atom0),
 
             atom1.chain_id,
             atom1.res_id,
             atom1.atom_name,
-            cls._get_alt_loc(atom1),
+            self._get_alt_loc(atom1),
 
             atom2.chain_id,
             atom2.res_id,
             atom2.atom_name,
-            cls._get_alt_loc(atom2),
+            self._get_alt_loc(atom2),
 
             '{:.1f}'.format(restraint.value),
             '{:.1f}'.format(restraint.sigma),

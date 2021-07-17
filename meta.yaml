@@ -1,6 +1,6 @@
 package:
   name: restraintlib
-  version: 2021.07.1
+  version: 2021.07.2
 
 source:
   git_url: https://github.com/mkowiel/restraintlib.git
@@ -19,7 +19,7 @@ requirements:
     - python
   run:
     - python
-    - cctbx >=2020.8
+    - cctbx-base >=2020.8
     - scikit-learn ==0.20.3
     - pandas ==0.24.2
     - six

@@ -1,4 +1,9 @@
 
+# 2021.07.2
+
+Override sigma values for Buster (1.5 for angles and 0.020 for bonds) and for Phenix (3.0 for angles, 0.020 for bonds)
+Use "change" option for Phenix printer, with few exceptions
+
 # 2021.07.1
 
 Add Buster Printer.

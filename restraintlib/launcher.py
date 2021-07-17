@@ -44,17 +44,17 @@ class RestraintLibLauncher(object):
     def report_progress(self, percent, total):
         pass
 
-    def produce_restraints(self, in_pdb, printer, allowed_restraints_config):
-        if printer == 'P':
-            printer_cls = PhenixPrinter
-        elif printer == 'S':
-            printer_cls = ShelxPrinter
-        elif printer == 'C':
-            printer_cls = CsvPrinter
-        elif printer == 'B':
-            printer_cls = BusterPrinter
+    def produce_restraints(self, in_pdb, printer_code, override_sigma, allowed_restraints_config):
+        if printer_code == 'P':
+            printer = PhenixPrinter(override_sigma=override_sigma)
+        elif printer_code == 'S':
+            printer = ShelxPrinter(override_sigma=override_sigma)
+        elif printer_code == 'C':
+            printer = CsvPrinter(override_sigma=override_sigma)
+        elif printer_code == 'B':
+            printer = BusterPrinter(override_sigma=override_sigma)
         else:
-            printer_cls = RefmacPrinter
+            printer = RefmacPrinter(override_sigma=override_sigma)
 
         restraint_list = load_restraints_lib()
         allowed_restraint_list = load_restraints_lib(
@@ -66,7 +66,7 @@ class RestraintLibLauncher(object):
             allowed_restraints_config.ribose_deoxyribose_terminal,
         )
 
-        parse_pdb(in_pdb, restraint_list, allowed_restraint_list, self.log_stream, printer_cls)
+        parse_pdb(in_pdb, restraint_list, allowed_restraint_list, self.log_stream, printer)
 
         return []
 
@@ -75,6 +75,8 @@ def main():
     parser = argparse.ArgumentParser(description='Generate olgonucleotides restraints for pdb or mmcif file')
     parser.add_argument('printer', type=str, choices=['refmac', 'phenix', 'shelxl', 'buster', 'csv'], default='refmac',
                         help='Restraint output format')
+    parser.add_argument('keep_orginal_sigma', action='store_true', 
+                        help='Keep sigma values calulated from the CSD data, without the flag sigma values will be program specific')
     parser.add_argument('in_filename', type=str, default='in.pdb', help='Input file')
     parser.add_argument('out_filename', type=str, default='restraints.txt', help='Output restraints file')
 
@@ -82,23 +84,24 @@ def main():
     printer = args.printer.lower()
     in_pdb = args.in_filename
     out_filename = args.out_filename
+    keep_orginal_sigma = args.keep_orginal_sigma
 
     if printer == 'refmac':
-        printer_cls = RefmacPrinter
+        printer = RefmacPrinter(not keep_orginal_sigma)
     elif printer == 'phenix':
-        printer_cls = PhenixPrinter
+        printer = PhenixPrinter(not keep_orginal_sigma)
     elif printer == 'shelxl':
-        printer_cls = ShelxPrinter
+        printer = ShelxPrinter(not keep_orginal_sigma)
     elif printer == 'csv':
-        printer_cls = CsvPrinter
+        printer = CsvPrinter(not keep_orginal_sigma)
     elif printer == 'buster':
-        printer_cls = BusterPrinter
+        printer = BusterPrinter(not keep_orginal_sigma)
     else:
         print("Unknown printer {}, should be one of refmac, phenix, shelxl, buster, csv".format(printer))
         return
 
     restraint_list = load_restraints_lib()
-    parse_pdb(in_pdb, restraint_list, restraint_list, out_filename, printer_cls)
+    parse_pdb(in_pdb, restraint_list, restraint_list, out_filename, printer)
 
 
 if __name__ == "__main__":

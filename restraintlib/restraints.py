@@ -29,7 +29,7 @@ from restraintlib.lib import ribose_pyrimidine_terminal_C5
 
 from cctbx.array_family import flex
 
-VERSION = '2021.07.1'
+VERSION = '2021.07.2'
 
 
 def regressor_absolute_path(filename):
@@ -771,20 +771,20 @@ class MonomerRestraintGroup(object):
         return restraints
 
 
-def save(stream, restraint_groups, restraint_text_all, printer_cls, in_filename):
-    printer_cls.save_info(stream, restraint_groups, version=VERSION)
-    printer_cls.save_input_filename(stream, in_filename)
+def save(stream, restraint_groups, restraint_text_all, printer, in_filename):
+    printer.save_info(stream, restraint_groups, version=VERSION)
+    printer.save_input_filename(stream, in_filename)
 
     if len(restraint_text_all) == 0:
         print("# There were no restraints to be created based on the submitted PDB file", file=stream)
     else:
-        header = printer_cls.header()
+        header = printer.header()
         if header != '':
             print(header, file=stream)
 
         print("\n".join(restraint_text_all), file=stream)
 
-        footer = printer_cls.footer()
+        footer = printer.footer()
         if footer != '':
             print(footer, file=stream)
 
@@ -816,7 +816,7 @@ def print_info_about_restraints(all_restraints):
             print("\t\tAngles: %s" % (sorted((res for res in rest if res.startswith('a')))))
 
 
-def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, printer_cls, lines=False, source_info=None):
+def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, printer, lines=False, source_info=None):
     if lines is False and (in_pdb.endswith(".res") or in_pdb.endswith(".ins")):
         raise Exception("Shelx format files not supported")
     else:
@@ -824,7 +824,7 @@ def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, 
         data_pdb = iotbx.pdb.input(lines=flex.split_lines(in_pdb), source_info=source_info) if lines else iotbx.pdb.input(file_name=in_pdb)
         pdb_hierarchy = data_pdb.construct_hierarchy()
 
-        printer_cls.validate(pdb_hierarchy)
+        printer.validate(pdb_hierarchy)
 
         for model in pdb_hierarchy.models():
             for chain in model.chains():
@@ -856,15 +856,15 @@ def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, 
     # print_info_about_restraints(all_restraints)
 
     restraint_text_all = []
-    restraint_text = printer_cls.print_restraints(all_restraints, allowed_restraint_groups)
+    restraint_text = printer.print_restraints(all_restraints, allowed_restraint_groups)
     if len(restraint_text) > 0:
         restraint_text_all.append(restraint_text)
 
     if type(out_filename) == str or type(out_filename) == six.text_type:
         with open(out_filename, 'w') as res_file:
-            save(res_file, allowed_restraint_groups, restraint_text_all, printer_cls, in_filename)
+            save(res_file, allowed_restraint_groups, restraint_text_all, printer, in_filename)
     else:
-        save(out_filename, allowed_restraint_groups, restraint_text_all, printer_cls, in_filename)
+        save(out_filename, allowed_restraint_groups, restraint_text_all, printer, in_filename)
 
 
 def create_monomer_group(module, prefix, name):
