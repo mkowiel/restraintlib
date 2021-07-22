@@ -29,7 +29,7 @@ from restraintlib.lib import ribose_pyrimidine_terminal_C5
 
 from cctbx.array_family import flex
 
-VERSION = '2021.07.2'
+VERSION = '2021.07.3'
 
 
 def regressor_absolute_path(filename):
@@ -672,7 +672,7 @@ class MonomerRestraintGroup(object):
                 print(self.name, key, atom.chain_id, atom.res_id, atom.res_name, atom.atom_name, atom.alt_loc, atom.atom_xyz)
         print("# PRINT GROUPS finished")
 
-    def is_valid_atom_group(self, group_key, group):
+    def is_valid_atom_group(self, group_key, group, verbose):
         split_key = group_key.split("_")
         chain_id = split_key[0].strip()
         res_id = int(split_key[1])
@@ -687,18 +687,19 @@ class MonomerRestraintGroup(object):
             atom_2 = group.find_neighbour(chain_id, atom_name_2, res_id + res_id_mod_2, alt_id)
 
             if atom_1 is None or atom_2 is None or atom_1.dist(atom_2) > dist:
-                print("{} {} {}: non valid dist: {}, atom1: {} {} {}, atom2: {} {} {}".format(
-                    self.name,
-                    chain_id,
-                    res_id,
-                    'at least one missing' if atom_1 is None or atom_2 is None else atom_1.dist(atom_2),
-                    atom_1.chain_id if atom_1 else '',
-                    atom_1.res_id if atom_1 else '',
-                    atom_name_1,
-                    atom_2.chain_id if atom_2 else '',
-                    atom_2.res_id if atom_2 else '',
-                    atom_name_2,
-                ))
+                if verbose > 0:
+                    print("{} {} {}: non valid dist: {}, atom1: {} {} {}, atom2: {} {} {}".format(
+                        self.name,
+                        chain_id,
+                        res_id,
+                        'at least one missing' if atom_1 is None or atom_2 is None else atom_1.dist(atom_2),
+                        atom_1.chain_id if atom_1 else '',
+                        atom_1.res_id if atom_1 else '',
+                        atom_name_1,
+                        atom_2.chain_id if atom_2 else '',
+                        atom_2.res_id if atom_2 else '',
+                        atom_name_2,
+                    ))
                 return False
         return True
 
@@ -710,7 +711,7 @@ class MonomerRestraintGroup(object):
             print('#'*60)
             print("# SEARCHING for {} group/monomer".format(self.name))
         for group_key, group in sorted(six.iteritems(self.groups)):
-            if not self.is_valid_atom_group(group_key, group):
+            if not self.is_valid_atom_group(group_key, group, verbose):
                 del self.groups[group_key]
                 if verbose > 0:
                     print("#     {} ignoring".format(group_key))

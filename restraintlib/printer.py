@@ -344,13 +344,19 @@ class PhenixPrinter(PrinterBase):
         return 0.020 if self.override_sigma else value
 
     def action_type(self, kind, restraint):
-        action = 'change'
-        if kind == 'bond':
-            atom_name_0 = restraint.atoms[0].atom_name
-            atom_name_1 = restraint.atoms[1].atom_name
-            if (atom_name_0 == "O3'" and atom_name_1 == "C3'") or (atom_name_0 == "C3'" and atom_name_1 == "O3'"):
-                action = 'add'
-        return action 
+        return 'change'
+
+    def atoms_with_fixed_atom_order(self, restraint):
+        """
+        Older Phenix requires atoms to be in the right order for action=*change
+        """
+        if restraint.name in ("dO1P4", "dO2P4",  "dO3P4", "dO5P4"):
+            if restraint.atoms[0].atom_name != 'P':
+                return reversed(restraint.atoms)
+        elif restraint.name in ("dO3C3", "dO5C5"):
+            if restraint.atoms[0].atom_name != 'C':
+                return reversed(restraint.atoms)
+        return restraint.atoms
 
     def _prepare_restraint(self, kind, digit_after_dot, restraint):
         lines = []
@@ -364,7 +370,7 @@ class PhenixPrinter(PrinterBase):
         lines.append("  {} {{".format(kind))
         action = self.action_type(kind, restraint)
         lines.append("    action = *{}".format(action))
-        for i_atom, atom in enumerate(restraint.atoms, start=1):
+        for i_atom, atom in enumerate(self.atoms_with_fixed_atom_order(restraint), start=1):
             lines.append("    atom_selection_{} = {}".format(i_atom, self._atom_sel(atom)))
         #lines.append("    symmetry_operation = None")
         keyword_ideal = 'distance_ideal' if kind == 'bond' else 'angle_ideal'

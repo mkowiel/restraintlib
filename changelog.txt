@@ -1,4 +1,8 @@
 
+# 2021.07.3
+
+Change atom selection order for Phenix
+
 # 2021.07.2
 
 Override sigma values for Buster (1.5 for angles and 0.020 for bonds) and for Phenix (3.0 for angles, 0.020 for bonds)

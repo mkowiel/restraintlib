@@ -585,3 +585,46 @@ class RestrainLibTestCase(TestCase):
         data = self.buffer.getvalue()
         self.assert_4r15(data)
         self.assert_length_for_shelx(data)
+
+    def test_produce_restraints_phenix_atom_order_pdb(self):
+        restraints_config = AllowedRestraintsConfig(
+            po4=True,
+            po4terminal=True,
+            nucleicacidbases=True,
+            nucleicacidisobases=True,
+        )
+        self.lib.produce_restraints(self.pdb_3p4j, 'P', True, restraints_config)
+        data = self.buffer.getvalue()
+        dO3C3 = """# Restraint PO4==AS_3 dist dO3C3 1.438 0.007
+  bond {
+    action = *change
+    atom_selection_1 = chain A and resid 1 and name C3'
+    atom_selection_2 = chain A and resid 1 and name O3'
+    distance_ideal = 1.438
+    sigma = 0.020
+    slack = None
+  }"""
+        
+        dO1P4 = """# Restraint PO4==AS_3 dist dO1P4 1.478 0.010
+  bond {
+    action = *change
+    atom_selection_1 = chain A and resid 2 and name P
+    atom_selection_2 = chain A and resid 2 and name OP1
+    distance_ideal = 1.478
+    sigma = 0.020
+    slack = None
+  }"""
+       
+        dO5P4 = """# Restraint PO4==AS_3 dist dO5P4 1.594 0.009
+  bond {
+    action = *change
+    atom_selection_1 = chain A and resid 2 and name P
+    atom_selection_2 = chain A and resid 2 and name O5'
+    distance_ideal = 1.594
+    sigma = 0.020
+    slack = None
+  }"""
+        
+        self.assertIn(dO3C3, data)
+        self.assertIn(dO1P4, data)
+        self.assertIn(dO5P4, data)
