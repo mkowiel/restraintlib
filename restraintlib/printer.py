@@ -636,8 +636,7 @@ class TuplePrinter(object):
         atom1 = restraint.atoms[1]
 
         return (
-            atom0.serial,
-            atom1.serial,
+            (atom0.i_seq, atom1.i_seq),
             round(restraint.value, 3),
             round(0.020 if self.override_sigma else restraint.sigma, 3),
         )
@@ -652,9 +651,7 @@ class TuplePrinter(object):
         atom2 = restraint.atoms[2]
 
         return (
-            atom0.serial,
-            atom1.serial,
-            atom2.serial,
+            (atom0.i_seq, atom1.i_seq, atom2.i_seq),
             round(restraint.value, 1),
             round(3.0 if self.override_sigma else restraint.sigma, 1),
         )

@@ -637,13 +637,13 @@ class RestrainLibTestCase(TestCase):
         pdb_hierarchy = data_pdb.construct_hierarchy()
         records = cdl_nucleotides(pdb_hierarchy, True)
         self.assertEqual(len(records), 678)
-        self.assertEqual(records[0], (18, 17, 19, 119.9, 3.0))
-        self.assertEqual(records[-1], (123, 124, 1.445, 0.02))
+        self.assertEqual(records[0], ((17, 16, 18), 119.9, 3.0))
+        self.assertEqual(records[-1], ((122, 123), 1.445, 0.02))
 
     def test_cdl_nucleotides_3p4j_pdb_original_sigma(self):
         data_pdb = iotbx.pdb.input(file_name=self.pdb_3p4j)
         pdb_hierarchy = data_pdb.construct_hierarchy()
         records = cdl_nucleotides(pdb_hierarchy, False)
         self.assertEqual(len(records), 678)
-        self.assertEqual(records[0], (18, 17, 19, 119.9, 1.6))
-        self.assertEqual(records[-1], (123, 124, 1.445, 0.009))
+        self.assertEqual(records[0], ((17, 16, 18), 119.9, 1.6))
+        self.assertEqual(records[-1], ((122, 123), 1.445, 0.009))

@@ -622,9 +622,9 @@ class MonomerRestraintGroup(object):
             #print("Disallowed atoms not found", self.name, chain_id, atom_name_1, res_id + res_id_mod_1, alt_id, chain_id, atom_name_2, res_id + res_id_mod_2, alt_id)
         return False
 
-    def add_atom(self, chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, serial):
+    def add_atom(self, chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, i_seq):
         if self.is_registered_res_id_or_neighbour(chain_id, res_id):
-            atom = Atom(chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, serial)
+            atom = Atom(chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, i_seq)
             self.atoms.append(atom)
 
     def create_res_groups(self):
@@ -840,7 +840,7 @@ def analyze_pdb_hierarhy(pdb_hierarchy, restraint_groups, allowed_restraint_grou
                             altloc = atom_group.altloc.strip()
                             for atom in atom_group.atoms():
                                 restraint.add_atom(
-                                    chain.id, residue_group.resid(), atom_group.resname, atom.name, altloc, atom.xyz, atom.serial_as_int()
+                                    chain.id, residue_group.resid(), atom_group.resname, atom.name, altloc, atom.xyz, atom.i_seq
                                 )
 
     all_restraints = []

@@ -9,10 +9,10 @@ __author__ = "Marcin Kowiel, Dariusz Brzezinski"
 class Atom(object):
     # use slots to minimize memory footprint
     __slots__ = (
-        'chain_id', 'res_id', 'res_name', 'atom_name', 'alt_loc', 'atom_xyz', 'serial'
+        'chain_id', 'res_id', 'res_name', 'atom_name', 'alt_loc', 'atom_xyz', 'i_seq'
     )
 
-    def __init__(self, chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, serial):
+    def __init__(self, chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, i_seq):
         """
         Represents an atom from a pdb file, for which restraints (e.g., bond length or angle) will be created.
         :param chain_id: chain id
@@ -28,7 +28,7 @@ class Atom(object):
         self.atom_name = atom_name.strip()
         self.alt_loc = alt_loc.strip()
         self.atom_xyz = atom_xyz
-        self.serial = serial
+        self.i_seq = i_seq
 
     def __str__(self):
         """
