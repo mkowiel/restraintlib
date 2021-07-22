@@ -529,7 +529,7 @@ class RestrainLibTestCase(TestCase):
         self.lib.produce_restraints(self.pdb_1d8g, 'R', False, self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_1d8g(data)
-    
+
     def test_produce_restraints_buster_1d8g_pdb(self):
         self.lib.produce_restraints(self.pdb_1d8g, 'B', False, self.restraints_config)
         data = self.buffer.getvalue()
@@ -604,7 +604,7 @@ class RestrainLibTestCase(TestCase):
     sigma = 0.020
     slack = None
   }"""
-        
+
         dO1P4 = """# Restraint PO4==AS_3 dist dO1P4 1.478 0.010
   bond {
     action = *change
@@ -614,7 +614,7 @@ class RestrainLibTestCase(TestCase):
     sigma = 0.020
     slack = None
   }"""
-       
+
         dO5P4 = """# Restraint PO4==AS_3 dist dO5P4 1.594 0.009
   bond {
     action = *change
@@ -624,7 +624,7 @@ class RestrainLibTestCase(TestCase):
     sigma = 0.020
     slack = None
   }"""
-        
+
         self.assertIn(dO3C3, data)
         self.assertIn(dO1P4, data)
         self.assertIn(dO5P4, data)
