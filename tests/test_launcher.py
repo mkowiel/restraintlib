@@ -6,7 +6,10 @@ from six import StringIO
 from unittest import TestCase
 from unittest import expectedFailure
 
+import iotbx.pdb
+
 from restraintlib.launcher import AllowedRestraintsConfig
+from restraintlib.launcher import cdl_nucleotides
 from restraintlib.launcher import RestraintLibLauncher
 from restraintlib.restraints import VERSION
 
@@ -628,3 +631,19 @@ class RestrainLibTestCase(TestCase):
         self.assertIn(dO3C3, data)
         self.assertIn(dO1P4, data)
         self.assertIn(dO5P4, data)
+
+    def test_cdl_nucleotides_3p4j_pdb(self):
+        data_pdb = iotbx.pdb.input(file_name=self.pdb_3p4j)
+        pdb_hierarchy = data_pdb.construct_hierarchy()
+        records = cdl_nucleotides(pdb_hierarchy, True)
+        self.assertEqual(len(records), 678)
+        self.assertEqual(records[0], (18, 17, 19, 119.9, 3.0))
+        self.assertEqual(records[-1], (123, 124, 1.445, 0.02))
+
+    def test_cdl_nucleotides_3p4j_pdb_original_sigma(self):
+        data_pdb = iotbx.pdb.input(file_name=self.pdb_3p4j)
+        pdb_hierarchy = data_pdb.construct_hierarchy()
+        records = cdl_nucleotides(pdb_hierarchy, False)
+        self.assertEqual(len(records), 678)
+        self.assertEqual(records[0], (18, 17, 19, 119.9, 1.6))
+        self.assertEqual(records[-1], (123, 124, 1.445, 0.009))

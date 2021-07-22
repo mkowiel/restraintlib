@@ -1,4 +1,8 @@
 
+# 2021.07.4
+
+Refactor code and add cdl_nucleotides function to launcher.py
+
 # 2021.07.3
 
 Change atom selection order for Phenix

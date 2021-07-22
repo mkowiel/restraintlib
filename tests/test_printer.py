@@ -16,9 +16,9 @@ class PrinterTestCase(TestCase):
 
     def setUp(self):
         atoms = [
-            Atom('A', '100', 'DT', 'OP1', 'A', (1.0, 0.0, 0.0)),
-            Atom('A', '100', 'DT', 'P', 'A', (1.0, 1.6, 0.0)),
-            Atom('A', '100', 'DT', 'OP2', 'A', (1.0, 3.2, 0.0)),
+            Atom('A', '100', 'DT', 'OP1', 'A', (1.0, 0.0, 0.0), 1),
+            Atom('A', '100', 'DT', 'P', 'A', (1.0, 1.6, 0.0), 2),
+            Atom('A', '100', 'DT', 'OP2', 'A', (1.0, 3.2, 0.0), 3),
         ]
 
         self.restraints = [
@@ -178,9 +178,9 @@ class PhenixPrinterO3C3TestCase(PrinterTestCase):
         self.printer = PhenixPrinter(override_sigma=True)
 
         atoms = [
-            Atom('A', '100', 'T', "O3'", 'A', (1.0, 0.0, 0.0)),
-            Atom('A', '100', 'T', "C3'", 'A', (1.0, 1.6, 0.0)),
-            Atom('A', '100', 'T', "C4'", 'A', (1.0, 3.2, 0.0)),
+            Atom('A', '100', 'T', "O3'", 'A', (1.0, 0.0, 0.0), 1),
+            Atom('A', '100', 'T', "C3'", 'A', (1.0, 1.6, 0.0), 2),
+            Atom('A', '100', 'T', "C4'", 'A', (1.0, 3.2, 0.0), 3),
         ]
 
         self.allowed_restraints = load_restraints_lib(

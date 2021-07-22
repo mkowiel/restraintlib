@@ -500,11 +500,11 @@ class BusterPrinter(PrinterBase):
         comment = self._comment(restraint)
         if comment != '':
             lines.append(comment)
-        
+
         line = "NOTE BUSTER_DISTANCE ={:.3f} {:.3f} {}|{}:{}{} {}|{}:{}{}".format(
             restraint.value,
             self.dist_sigma_value(restraint.sigma),
-            
+
             atom0.chain_id,
             atom0.res_id,
             atom0.atom_name,
@@ -620,3 +620,65 @@ class CsvPrinter(PrinterBase):
         )))
 
         return line
+
+
+class TuplePrinter(object):
+
+    def __init__(self, override_sigma=True):
+        self.override_sigma = override_sigma
+
+    @classmethod
+    def validate(cls, hierarchy):
+        return None
+
+    def get_dist(self, restraint, all_restraints):
+        atom0 = restraint.atoms[0]
+        atom1 = restraint.atoms[1]
+
+        return (
+            atom0.serial,
+            atom1.serial,
+            round(restraint.value, 3),
+            round(0.020 if self.override_sigma else restraint.sigma, 3),
+        )
+
+    def angle_sigma_value(self, value):
+        """ Default sigma for angles in PHENIX is 3.0"""
+        return
+
+    def get_angle(self, restraint, all_restraints):
+        atom0 = restraint.atoms[0]
+        atom1 = restraint.atoms[1]
+        atom2 = restraint.atoms[2]
+
+        return (
+            atom0.serial,
+            atom1.serial,
+            atom2.serial,
+            round(restraint.value, 1),
+            round(3.0 if self.override_sigma else restraint.sigma, 1),
+        )
+
+    def print_restraints(self, restraints, allowed_restraint_groups):
+        lines = []
+
+        allowed_condition_name = [
+            conditional_restraint.name
+            for group in allowed_restraint_groups
+            for conditional_restraint in group.restraints
+        ]
+
+        for restraint in restraints:
+            # for shelx printer we need dist to print angles, they can be defined in other lib
+            if restraint.condition_name in allowed_condition_name:
+                line = None
+                if restraint.type == 'angle':
+                    line = self.get_angle(restraint, restraints)
+                elif restraint.type == 'dist':
+                    line = self.get_dist(restraint, restraints)
+
+                # usuwanie duplikujacych sie wynikow dla alt_loc (blank-blank) w przypadku gdy mamy A i B
+                if line not in lines:
+                    lines.append(line)
+
+        return lines

@@ -106,11 +106,11 @@ class ConditionalRestraintListTestCase(TestCase):
 
     def test_find_restraint_closest(self):
         atoms = {
-            "OP1": Atom('A', 20, 'C', "OP1", '', [1, 0, 0]),
-            "OP2": Atom('A', 20, 'C', "OP2", '', [0, 1, 0]),
-            "P":   Atom('A', 20, 'C', "P",   '', [0, 0, 0]),
-            "O3'": Atom('A', 20, 'C', "O3'", '', [1, 0, 1]),
-            "O5'": Atom('A', 20, 'C', "O5'", '', [0, 1, 1.1]),
+            "OP1": Atom('A', 20, 'C', "OP1", '', [1, 0, 0], 1),
+            "OP2": Atom('A', 20, 'C', "OP2", '', [0, 1, 0], 2),
+            "P":   Atom('A', 20, 'C', "P",   '', [0, 0, 0], 3),
+            "O3'": Atom('A', 20, 'C', "O3'", '', [1, 0, 1], 4),
+            "O5'": Atom('A', 20, 'C', "O5'", '', [0, 1, 1.1], 5),
         }
         distance_measure = DistanceMeasure('euclidean_angles', ['aO1O2', 'aO1O3', 'aO1O5', 'aO2O3', 'aO2O5', 'aO3O5'])
         closest = self.restraint_list.find_restraint_closest(atoms, distance_measure)

@@ -4,11 +4,15 @@ import argparse
 import sys
 import six
 
+from libtbx.utils import Sorry
+
 from restraintlib.printer import BusterPrinter
 from restraintlib.printer import CsvPrinter
 from restraintlib.printer import ShelxPrinter
 from restraintlib.printer import PhenixPrinter
 from restraintlib.printer import RefmacPrinter
+from restraintlib.printer import TuplePrinter
+from restraintlib.restraints import analyze_pdb_hierarhy
 from restraintlib.restraints import load_restraints_lib
 from restraintlib.restraints import parse_pdb
 
@@ -69,6 +73,15 @@ class RestraintLibLauncher(object):
         parse_pdb(in_pdb, restraint_list, allowed_restraint_list, self.log_stream, printer)
 
         return []
+
+
+def cdl_nucleotides(pdb_hierarchy, override_sigma=True):
+    try:
+        restraint_groups = load_restraints_lib()
+        printer = TuplePrinter(override_sigma=override_sigma)
+        return analyze_pdb_hierarhy(pdb_hierarchy, restraint_groups, restraint_groups, printer)
+    except Exception as err:
+        raise Sorry('CDL Nucleotides error, swich off ')
 
 
 def main():

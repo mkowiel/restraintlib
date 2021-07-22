@@ -29,7 +29,7 @@ from restraintlib.lib import ribose_pyrimidine_terminal_C5
 
 from cctbx.array_family import flex
 
-VERSION = '2021.07.3'
+VERSION = '2021.07.4'
 
 
 def regressor_absolute_path(filename):
@@ -622,9 +622,9 @@ class MonomerRestraintGroup(object):
             #print("Disallowed atoms not found", self.name, chain_id, atom_name_1, res_id + res_id_mod_1, alt_id, chain_id, atom_name_2, res_id + res_id_mod_2, alt_id)
         return False
 
-    def add_atom(self, chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz):
+    def add_atom(self, chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, serial):
         if self.is_registered_res_id_or_neighbour(chain_id, res_id):
-            atom = Atom(chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz)
+            atom = Atom(chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, serial)
             self.atoms.append(atom)
 
     def create_res_groups(self):
@@ -817,38 +817,31 @@ def print_info_about_restraints(all_restraints):
             print("\t\tAngles: %s" % (sorted((res for res in rest if res.startswith('a')))))
 
 
-def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, printer, lines=False, source_info=None):
-    if lines is False and (in_pdb.endswith(".res") or in_pdb.endswith(".ins")):
-        raise Exception("Shelx format files not supported")
-    else:
-        in_filename = source_info if lines else in_pdb
-        data_pdb = iotbx.pdb.input(lines=flex.split_lines(in_pdb), source_info=source_info) if lines else iotbx.pdb.input(file_name=in_pdb)
-        pdb_hierarchy = data_pdb.construct_hierarchy()
+def analyze_pdb_hierarhy(pdb_hierarchy, restraint_groups, allowed_restraint_groups, printer):
+    printer.validate(pdb_hierarchy)
 
-        printer.validate(pdb_hierarchy)
-
-        for model in pdb_hierarchy.models():
-            for chain in model.chains():
-                for residue_group in chain.residue_groups():
-                    for atom_group in residue_group.atom_groups():
-                        # if necessary only for speed optimization
-                        for restraint in restraint_groups:
-                            if restraint.is_valid_res_name(atom_group.resname):
-                                restraint.register_valid_res_id(chain.id, residue_group.resid())
+    for model in pdb_hierarchy.models():
+        for chain in model.chains():
+            for residue_group in chain.residue_groups():
+                for atom_group in residue_group.atom_groups():
+                    # if necessary only for speed optimization
+                    for restraint in restraint_groups:
+                        if restraint.is_valid_res_name(atom_group.resname):
+                            restraint.register_valid_res_id(chain.id, residue_group.resid())
 
 
-        for model in pdb_hierarchy.models():
-            for chain in model.chains():
-                for residue_group in chain.residue_groups():
-                    for atom_group in residue_group.atom_groups():
-                        # if necessary only for speed optimization
-                        for restraint in restraint_groups:
-                            if restraint.is_registered_res_id_or_neighbour(chain.id, residue_group.resid()):
-                                altloc = atom_group.altloc.strip()
-                                for atom in atom_group.atoms():
-                                    restraint.add_atom(
-                                        chain.id, residue_group.resid(), atom_group.resname, atom.name, altloc, atom.xyz
-                                    )
+    for model in pdb_hierarchy.models():
+        for chain in model.chains():
+            for residue_group in chain.residue_groups():
+                for atom_group in residue_group.atom_groups():
+                    # if necessary only for speed optimization
+                    for restraint in restraint_groups:
+                        if restraint.is_registered_res_id_or_neighbour(chain.id, residue_group.resid()):
+                            altloc = atom_group.altloc.strip()
+                            for atom in atom_group.atoms():
+                                restraint.add_atom(
+                                    chain.id, residue_group.resid(), atom_group.resname, atom.name, altloc, atom.xyz, atom.serial_as_int()
+                                )
 
     all_restraints = []
     for restraint_group in restraint_groups:
@@ -856,16 +849,27 @@ def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, 
 
     # print_info_about_restraints(all_restraints)
 
-    restraint_text_all = []
     restraint_text = printer.print_restraints(all_restraints, allowed_restraint_groups)
-    if len(restraint_text) > 0:
-        restraint_text_all.append(restraint_text)
+    if type(restraint_text) == six.text_type and len(restraint_text) > 0:
+        return [restraint_text]
+    return restraint_text
 
+
+def parse_pdb(in_pdb, restraint_groups, allowed_restraint_groups, out_filename, printer, lines=False, source_info=None):
+    printed_restraints_list = []
+    if lines is False and (in_pdb.endswith(".res") or in_pdb.endswith(".ins")):
+        raise Exception("Shelx format files not supported")
+    else:
+        in_filename = source_info if lines else in_pdb
+        data_pdb = iotbx.pdb.input(lines=flex.split_lines(in_pdb), source_info=source_info) if lines else iotbx.pdb.input(file_name=in_pdb)
+        pdb_hierarchy = data_pdb.construct_hierarchy()
+
+        printed_restraints_list = analyze_pdb_hierarhy(pdb_hierarchy, restraint_groups, allowed_restraint_groups, printer)
     if type(out_filename) == str or type(out_filename) == six.text_type:
         with open(out_filename, 'w') as res_file:
-            save(res_file, allowed_restraint_groups, restraint_text_all, printer, in_filename)
+            save(res_file, allowed_restraint_groups, printed_restraints_list, printer, in_filename)
     else:
-        save(out_filename, allowed_restraint_groups, restraint_text_all, printer, in_filename)
+        save(out_filename, allowed_restraint_groups, printed_restraints_list, printer, in_filename)
 
 
 def create_monomer_group(module, prefix, name):
