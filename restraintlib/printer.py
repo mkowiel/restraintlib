@@ -344,18 +344,63 @@ class PhenixPrinter(PrinterBase):
         return 0.020 if self.override_sigma else value
 
     def action_type(self, kind, restraint):
+        if (restraint.condition_name, restraint.name) in (
+            ("Base==Cytosine", "dC4C5"),
+        ):
+            return 'add'
+        if (restraint.condition_name, restraint.name) in (
+            ("Base==Cytosine", "dC4C5"),
+        ):
+            return 'add'
         return 'change'
 
     def atoms_with_fixed_atom_order(self, restraint):
         """
         Older Phenix requires atoms to be in the right order for action=*change
         """
-        if restraint.name in ("dO1P4", "dO2P4",  "dO3P4", "dO5P4"):
-            if restraint.atoms[0].atom_name != 'P':
-                return reversed(restraint.atoms)
-        elif restraint.name in ("dO3C3", "dO5C5"):
-            if restraint.atoms[0].atom_name != 'C':
-                return reversed(restraint.atoms)
+        if restraint.type == 'dist' and restraint.atoms[0].alt_loc == '' and restraint.atoms[1].alt_loc != '':
+            return restraint.atoms
+        if restraint.type == 'dist' and restraint.atoms[0].alt_loc != '' and restraint.atoms[1].alt_loc == '':
+            return reversed(restraint.atoms)
+
+        if (restraint.condition_name, restraint.name, restraint.atoms[0].atom_name) in (
+            ("Base==Guanine", "dC6N1", "C6"),
+            ("Base==Thymine", "dC4C5", "C4"),
+            ("Base==Uracil", "dC4C5", "C4"),
+        ):
+            print('!', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].atom_name)
+            return restraint.atoms
+
+        if (restraint.condition_name, restraint.name, restraint.atoms[0].atom_name) in (
+            ("Base==Cytosine", "dC6N1", "C6"),
+            ("Base==Thymine", "dC6N1", "C6"),
+            ("Base==Uracil", "dC6N1", "C6"),
+        ):
+            print('+', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].atom_name)
+            return reversed(restraint.atoms)
+
+        elif (restraint.name, restraint.atoms[0].atom_name) in (
+            ("dO1P4", "OP1"),
+            ("dO2P4", "OP2"),
+            ("dO5P4", "O5'"),
+            ("dO3C3", "O3'"),
+            ("dO5C5", "C5'"),
+            ("dC4C5", "C4"),
+            ("dC5N7", "C5"),
+            ("dN7C8", "N7"),
+            ("dC8N9", "C8"),
+            ("dC6N1", "N1"),
+            ("dC4'C5'", "C4'"),
+            ("dC3'C4'", "C3'"),
+            ("dC1'O4'", "C1'"),
+            ("dC1'C2'", "C1'"),
+            ("dC2'C3'", "C2'"),
+            ("dC5'O5'", "C5'"),
+            ("dC7C5", "C7"),
+        ):
+            print(restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].atom_name)
+            return reversed(restraint.atoms)
+
         return restraint.atoms
 
     def _prepare_restraint(self, kind, digit_after_dot, restraint):
