@@ -110,7 +110,7 @@ def main():
     elif printer_name == 'buster':
         printer = BusterPrinter(not keep_orginal_sigma)
     else:
-        print("Unknown printer {}, should be one of refmac, phenix, shelxl, buster, csv".format(printer))
+        print("Unknown printer {}, should be one of refmac, phenix, shelxl, buster, csv".format(printer_name))
         return
 
     restraint_list = load_restraints_lib()

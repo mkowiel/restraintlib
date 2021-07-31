@@ -368,12 +368,10 @@ class PhenixPrinter(PrinterBase):
         if (restraint.name, restraint.atoms[0].atom_name) in [
             ("dO3P4", "P"),
         ]:
-            print('-', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return reversed(restraint.atoms)
         if (restraint.name, restraint.atoms[0].atom_name) in [
             ("dO3P4", "O3'"),
         ]:
-            print('-', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return restraint.atoms
 
         if restraint.type == 'dist' and restraint.atoms[0].alt_loc == '' and restraint.atoms[1].alt_loc != '':
@@ -386,7 +384,6 @@ class PhenixPrinter(PrinterBase):
             ("Base==Thymine", "dC4C5", "C4"),
             ("Base==Uracil", "dC4C5", "C4"),
         ):
-            print('!', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return restraint.atoms
 
         if (restraint.condition_name, restraint.name, restraint.atoms[0].atom_name) in (
@@ -394,7 +391,6 @@ class PhenixPrinter(PrinterBase):
             ("Base==Thymine", "dC6N1", "C6"),
             ("Base==Uracil", "dC6N1", "C6"),
         ):
-            print('+', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return reversed(restraint.atoms)
 
         elif (restraint.name, restraint.atoms[0].atom_name) in (
@@ -417,7 +413,6 @@ class PhenixPrinter(PrinterBase):
             ("dC5'O5'", "C5'"),
             ("dC7C5", "C7"),
         ):
-            print(restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return reversed(restraint.atoms)
 
         return restraint.atoms
