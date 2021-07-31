@@ -8,6 +8,7 @@ from restraintlib.printer import PhenixPrinter
 from restraintlib.printer import PrinterBase
 from restraintlib.printer import RefmacPrinter
 from restraintlib.printer import ShelxPrinter
+from restraintlib.printer import TuplePrinter
 from restraintlib.restraints import Restraint
 from restraintlib.restraints import load_restraints_lib
 
@@ -302,3 +303,30 @@ class BusterPrinterSigmaOverrideTestCase(PrinterTestCase):
             '# Restraint PO4==AA_0 dist dO1P4 1.487 0.010',
             'NOTE BUSTER_DISTANCE =1.487 0.020 A|100:OP1.A A|100:P.A'
         ]
+
+
+class TuplePrinterSigmaOverrideTestCase(PrinterTestCase):
+
+    def setUp(self):
+        super(TuplePrinterSigmaOverrideTestCase, self).setUp()
+        self.printer = TuplePrinter(override_sigma=True)
+
+        self.expected_lines_angle = [
+            ((1, 2, 3), 117.6, 3.0)
+        ]
+
+        self.expected_lines_dist = [
+            ((1, 2), 1.487, 0.020)
+        ]
+
+    def test_get_angle(self):
+        angle_text = self.printer.get_angle(self.restraints[0], self.restraints)
+
+        for line in self.expected_lines_angle:
+            self.assertEqual(line, angle_text)
+
+    def test_get_dist(self):
+        dist = self.printer.get_dist(self.restraints[1], self.restraints)
+
+        for line in self.expected_lines_dist:
+            self.assertEqual(line, dist)

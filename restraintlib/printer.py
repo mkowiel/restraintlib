@@ -348,8 +348,15 @@ class PhenixPrinter(PrinterBase):
             ("Base==Cytosine", "dC4C5"),
         ):
             return 'add'
-        if (restraint.condition_name, restraint.name) in (
-            ("Base==Cytosine", "dC4C5"),
+        elif (restraint.type == 'dist' and (restraint.atoms[0].res_name in ('IG', 'IC') or restraint.atoms[1].res_name in ('IG', 'IC'))):
+            return 'add'
+        elif (
+            restraint.type == 'angle'
+            and (
+                restraint.atoms[0].res_name in ('IG', 'IC')
+                or restraint.atoms[1].res_name in ('IG', 'IC')
+                or restraint.atoms[2].res_name in ('IG', 'IC')
+            )
         ):
             return 'add'
         return 'change'
@@ -358,6 +365,17 @@ class PhenixPrinter(PrinterBase):
         """
         Older Phenix requires atoms to be in the right order for action=*change
         """
+        if (restraint.name, restraint.atoms[0].atom_name) in [
+            ("dO3P4", "P"),
+        ]:
+            print('-', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
+            return reversed(restraint.atoms)
+        if (restraint.name, restraint.atoms[0].atom_name) in [
+            ("dO3P4", "O3'"),
+        ]:
+            print('-', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
+            return restraint.atoms
+
         if restraint.type == 'dist' and restraint.atoms[0].alt_loc == '' and restraint.atoms[1].alt_loc != '':
             return restraint.atoms
         if restraint.type == 'dist' and restraint.atoms[0].alt_loc != '' and restraint.atoms[1].alt_loc == '':
@@ -368,7 +386,7 @@ class PhenixPrinter(PrinterBase):
             ("Base==Thymine", "dC4C5", "C4"),
             ("Base==Uracil", "dC4C5", "C4"),
         ):
-            print('!', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].atom_name)
+            print('!', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return restraint.atoms
 
         if (restraint.condition_name, restraint.name, restraint.atoms[0].atom_name) in (
@@ -376,12 +394,13 @@ class PhenixPrinter(PrinterBase):
             ("Base==Thymine", "dC6N1", "C6"),
             ("Base==Uracil", "dC6N1", "C6"),
         ):
-            print('+', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].atom_name)
+            print('+', restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return reversed(restraint.atoms)
 
         elif (restraint.name, restraint.atoms[0].atom_name) in (
             ("dO1P4", "OP1"),
             ("dO2P4", "OP2"),
+            ("dO3P4", "P"),
             ("dO5P4", "O5'"),
             ("dO3C3", "O3'"),
             ("dO5C5", "C5'"),
@@ -398,7 +417,7 @@ class PhenixPrinter(PrinterBase):
             ("dC5'O5'", "C5'"),
             ("dC7C5", "C7"),
         ):
-            print(restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].atom_name)
+            print(restraint.condition_name, restraint.name, restraint.atoms[0].res_name, restraint.atoms[0].res_id, restraint.atoms[0].atom_name, restraint.atoms[1].res_name, restraint.atoms[1].res_id, restraint.atoms[1].atom_name)
             return reversed(restraint.atoms)
 
         return restraint.atoms
@@ -675,6 +694,14 @@ class TuplePrinter(object):
     @classmethod
     def validate(cls, hierarchy):
         return None
+
+    @classmethod
+    def header(cls):
+        return ''
+
+    @classmethod
+    def footer(cls):
+        return ''
 
     def get_dist(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]

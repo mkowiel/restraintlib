@@ -81,7 +81,7 @@ def cdl_nucleotides(pdb_hierarchy, override_sigma=True):
         printer = TuplePrinter(override_sigma=override_sigma)
         return analyze_pdb_hierarhy(pdb_hierarchy, restraint_groups, restraint_groups, printer)
     except Exception as err:
-        raise Sorry('CDL Nucleotides error, swich off ')
+        raise Sorry('CDL Nucleotides error, swich off cdl_nucleotides')
 
 
 def main():
