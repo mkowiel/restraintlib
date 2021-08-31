@@ -13,6 +13,7 @@ __author__ = "Marcin Kowiel, Dariusz Brzezinski"
 
 def serialize_pickle(model, filename):
     # if python3 use protocol 4 or highest, to be compatible with python2 we can use maximally protocol 2
+    print('Saving to', filename)
     with open(filename, 'wb') as pickle_file:
         pickle.dump(model, pickle_file, protocol=2)
 
@@ -54,7 +55,7 @@ def create_linear_regressors(df, x_col, y_cols, stats_df, dir_name='lib/regresso
                 gpr.fit(x, y)
 
                 stats_df = save_regressor_stats(gpr, x, y, sugar + "-" + conformation, y_col, stats_df)
-                serialize_pickle(gpr, dir_name + name + ".pickle")
+                serialize_pickle(gpr, os.path.join(dir_name, name + ".pickle"))
 
     return stats_df
 
@@ -81,7 +82,7 @@ def create_sine_regressors(df, x_col, y_cols, period, stats_df, use_base=True, d
                 gpr.fit(x, y)
 
                 stats_df = save_regressor_stats(gpr, x, y, base, y_col, stats_df)
-                serialize_pickle(gpr, dir_name + name + ".pickle")
+                serialize_pickle(gpr, os.path.join(dir_name, name + ".pickle"))
         else:
             name = 'All-' + y_col.replace("/", " or ")
             x = df.loc[:, x_col]
@@ -98,22 +99,26 @@ def create_sine_regressors(df, x_col, y_cols, period, stats_df, use_base=True, d
             gpr.fit(x, y)
 
             stats_df = save_regressor_stats(gpr, x, y, "All", y_col, stats_df)
-            serialize_pickle(gpr, dir_name + name + ".pickle")
+            serialize_pickle(gpr, os.path.join(dir_name, name + ".pickle"))
 
     return stats_df
 
 
 def run():
-    sugar_measurements = pd.read_csv('data/combined_results.csv')
+    abs_data_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'combined_results.csv')
+    abs_pickle_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'lib', 'regressors')
+    sugar_measurements = pd.read_csv(abs_data_path)
     print(sugar_measurements.head())
     stats_df = pd.DataFrame()
     stats_df = create_linear_regressors(sugar_measurements, "T_max",
-                                        ["C1'-C2'-C3'", "C2'-C3'-C4'", "C3'-C4'-O4'", "C1'-O4'-C4'"], stats_df)
+                                        ["C1'-C2'-C3'", "C2'-C3'-C4'", "C3'-C4'-O4'", "C1'-O4'-C4'"], 
+                                        stats_df,
+                                        dir_name=abs_pickle_dir)
     stats_df = create_sine_regressors(sugar_measurements, "TCHI", ["C1'-N1/C1'-N9", "C1'-O4'"], 180, stats_df,
-                                      use_base=False)
+                                      use_base=False, dir_name=abs_pickle_dir)
     stats_df = create_sine_regressors(sugar_measurements, "TCHI",
                                       ["N1-C1'-C2'/N9-C1'-C2'", "C1'-N1-C2/C1'-N9-C4", "C1'-N1-C6/C1'-N9-C8",
-                                       "N1-C1'-O4'/N9-C1'-O4'"], 360, stats_df)
+                                       "N1-C1'-O4'/N9-C1'-O4'"], 360, stats_df, dir_name=abs_pickle_dir)
     print(stats_df.head())
 
 

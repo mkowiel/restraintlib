@@ -1,3 +1,9 @@
+# 2021.7.7
+
+Add retrain script
+Support only for python >3.6
+For python 2.7 one need to retrain the model manually
+
 # 2021.07.6
 
 Test new release

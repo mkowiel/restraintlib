@@ -1,0 +1,51 @@
+{% set version = "9999.dev" %}
+
+package:
+  name: restraintlib
+  version: {{ version }}
+
+source:
+  path: .
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - pytest
+  host:
+    - pip
+    - python
+  run:
+    - python
+    - cctbx-base >=2020.8
+    - scikit-learn >0.21
+    - pandas
+    - six
+
+test:
+  imports:
+    - restraintlib
+  requires:
+    - pytest
+  source_files:
+    - tests/*.py
+    - tests/*.cif
+    - tests/*.pdb
+  commands:
+    - pytest
+
+about:
+  home: https://github.com/mkowiel/restraintlib
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Bond length and angle restraints for DNA and RNA oligonucleotides
+
+extra:
+  recipe-maintainers:
+    - mkowiel
+    - dabrze
