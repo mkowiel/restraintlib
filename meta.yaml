@@ -1,9 +1,13 @@
+{% set version = "2021.07.6" %}
+{% set sha256 = "e9883301d184252ea5a43249c6ebd4b29eb6bcd1d5ceba38c258d2448d619d17" %}
+
 package:
   name: restraintlib
-  version: 2021.07.5
+  version: {{ version }}
 
 source:
-  git_url: https://github.com/mkowiel/restraintlib.git
+  url: https://github.com/mkowiel/restraintlib/archive/refs/tags/{{ version }}.tar.gz
+  sha256: {{ sha256 }}
 
 build:
   number: 1
@@ -36,7 +40,14 @@ test:
   commands:
     - pytest
 
-
 about:
   home: https://github.com/mkowiel/restraintlib
-  license: BSD
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Bond length and angle restraints for DNA and RNA oligonucleotides
+
+extra:
+  recipe-maintainers:
+    - mkowiel
+    - dabrze
