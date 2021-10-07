@@ -1,3 +1,7 @@
+# 2021.7.8
+
+Fix for python2 compatibility
+
 # 2021.7.7
 
 Add retrain script

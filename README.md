@@ -5,8 +5,8 @@ Bond length and angle restraints for DNA and RNA oligonucleotides.
 
     M.Kowiel, D.Brzezinski, M. Gilski, M.Jaskolski (2020).
     Conformation-dependent restraints for polynucleotides: The sugar moiety.
-    Nucleic Acids Res. 48, 962–973. https://doi.org/10.1093/nar/gkz1122 OpenAccess 
-    
+    Nucleic Acids Res. 48, 962–973. https://doi.org/10.1093/nar/gkz1122 OpenAccess
+
     M.Gilski, J.Zhao, M.Kowiel, D.Brzezinski, D.H.Turner, M.Jaskolski (2019).
     Accurate geometrical restraints for Watson–Crick base pairs.
     Acta Cryst. B75, 235-245. https://doi.org/10.1107/S2052520619002002 OpenAccess
@@ -17,7 +17,7 @@ Bond length and angle restraints for DNA and RNA oligonucleotides.
 
 # Dependencies
 
-Scripts were tested with 
+Scripts were tested with
 
 * Python 3.7
 * cctbx==2020.10 [cctbx_project](https://github.com/cctbx/cctbx_project)
@@ -27,17 +27,17 @@ Scripts were tested with
 # Installation
 
 Install cctbx with use of miniconda/anacona setup (Option 1) or manually (Option 2).
-It seems cctbx installation from pypi does not work at the moment (2020.11.27). 
+It seems cctbx installation from pypi does not work at the moment (2020.11.27).
 
 ## Option 1: use anaconda setup
 
 1. Clone repository or download sourcecode.
 
-    ```bash 
+    ```bash
     git clone https://github.com/mkowiel/restraintlib.git
     ```
 
-2. Download Miniconda: [minicnda](https://docs.conda.io/en/latest/miniconda.html#linux-installers). 
+2. Download Miniconda: [minicnda](https://docs.conda.io/en/latest/miniconda.html#linux-installers).
 You can download for example https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 
 3. Install Miniconda
@@ -45,23 +45,23 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
     ```bash
     sh .\Miniconda3-latest-Linux-x86_64.sh
     ```
-    
-4. Create environment (in the example with `Python3.7` and the `cctbx` env name). 
+
+4. Create environment (in the example with `Python3.7` and the `cctbx` env name).
 
     ```bash
     conda create -n cctbx python=3.7
     conda install --force-reinstall -n cctbx -c conda-forge cctbx-base
     conda install --force-reinstall -n cctbx -c conda-forge pytest
-    conda install --force-reinstall -n cctbx -c conda-forge scikit-learn==0.20.3
+    conda install --force-reinstall -n cctbx -c conda-forge "scikit-learn>0.21,<1.0"
     conda install -c conda-forge conda-build conda-verify
     ```
-    
+
 4. Install library
-    
+
     ```bash
     # make sure you build on base environment
     conda activate base
-    conda-build . --python 3.7 -c conda-forge    
+    conda-build . --python 3.7 -c conda-forge
     conda install --force-reinstall -n cctbx -c local --offline restraintlib
     ```
 
@@ -76,8 +76,8 @@ Then install the library.
 
 1. Clone or download the source code.
 2. Install:
-    
-    ```bash  
+
+    ```bash
     cctbx.python setup.py install
     ```
 
@@ -87,7 +87,7 @@ Then install the library.
     conda activate cctbx
     restraintlib <printer_format> <input_file> <output_file>
 ```
-   
+
 # Test
 
 Execute `pytest` in the main directory
@@ -96,16 +96,16 @@ Execute `pytest` in the main directory
 
 The scripts are compatible with python 2.7, however the models are seriazized
 (pickeld) so it might be compatible with python 2.7 or different `scikit-learn` version.
-It is not the big problem, it is possible to recreate the modes from raw data 
+It is not the big problem, it is possible to recreate the modes from raw data
 (`restraintlib/data/combined_results.csv`). Install dependencies and execute:
 
 ```bash
 python retrain_restraintlib.py
 ```
-    
+
 or when installed manually
 
 ```bash
 cctbx.python retrain_restraintlib.py
 ```
-    
+
