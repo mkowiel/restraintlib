@@ -850,7 +850,7 @@ def analyze_pdb_hierarhy(pdb_hierarchy, restraint_groups, allowed_restraint_grou
     # print_info_about_restraints(all_restraints)
 
     restraint_text = printer.print_restraints(all_restraints, allowed_restraint_groups)
-    if type(restraint_text) == six.text_type and len(restraint_text) > 0:
+    if (type(restraint_text) == str or type(restraint_text) == six.text_type) and len(restraint_text) > 0:
         return [restraint_text]
     return restraint_text
 
