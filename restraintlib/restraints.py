@@ -29,7 +29,7 @@ from restraintlib.lib import ribose_pyrimidine_terminal_C5
 
 from cctbx.array_family import flex
 
-VERSION = '2021.7.8'
+VERSION = '2021.10.1'
 
 
 def regressor_absolute_path(filename):
@@ -607,6 +607,9 @@ class MonomerRestraintGroup(object):
     def is_valid_res_name(self, res_name):
         return res_name.strip() in self.res_names
 
+    def is_standard_res_name(self, res_name):
+        return res_name in ('A', 'C', 'G', 'T', 'U', 'DA', 'DC', 'DG', 'DT', 'DU', 'IC', 'IG')
+
     def is_valid_atom_name(self, atom_name):
         return atom_name.strip() in self._valid_atom_labels
 
@@ -641,8 +644,10 @@ class MonomerRestraintGroup(object):
                     ):
                         preliminary_groups[key].add_atom(atom)
                     if (
-                        chain_id == atom.chain_id and
-                        abs(res_id - atom.res_id) <= 1
+                        chain_id == atom.chain_id
+                        and abs(res_id - atom.res_id) <= 1
+                        # fix for restraints for G49 in 427d.pdb
+                        and self.is_standard_res_name(atom.res_name)
                     ):
                         preliminary_groups[key].add_neighbour(atom)
 

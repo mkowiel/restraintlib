@@ -1,3 +1,7 @@
+# 2021.10.1
+
+Fix genration of restraints for non-standard nucleotides (like G49 in 427d)
+
 # 2021.7.8
 
 Fix for python2 compatibility
