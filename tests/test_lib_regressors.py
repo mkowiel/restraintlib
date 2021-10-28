@@ -5,7 +5,6 @@ import sklearn
 from restraintlib.restraints import load_function
 
 
-
 class LibRegressorsTestCase(TestCase):
 
     def assertFunctional(self, function_name, x, expected_value, expected_sigma):
