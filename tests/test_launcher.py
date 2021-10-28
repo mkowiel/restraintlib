@@ -23,6 +23,7 @@ class RestrainLibTestCase(TestCase):
         self.pdb_ig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'IG.pdb')
         self.pdb_4r15 = os.path.join(os.path.dirname(os.path.abspath(__file__)), '4r15.pdb')
         self.pdb_disorder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'disorder.pdb')
+        self.pdb_427d = os.path.join(os.path.dirname(os.path.abspath(__file__)), '427d.pdb')
         self.mmcif_3p4j = os.path.join(os.path.dirname(os.path.abspath(__file__)), '3p4j.cif')
         self.mmcif_1d8g = os.path.join(os.path.dirname(os.path.abspath(__file__)), '1d8g.cif')
         self.mmcif_3ssf = os.path.join(os.path.dirname(os.path.abspath(__file__)), '3ssf.cif')
@@ -647,3 +648,12 @@ class RestrainLibTestCase(TestCase):
         self.assertEqual(len(records), 678)
         self.assertEqual(records[0], ((17, 16, 18), 119.9, 1.6))
         self.assertEqual(records[-1], ((122, 123), 1.445, 0.009))
+
+    def test_produce_restraints_427d_pdb(self):
+        self.lib.produce_restraints(self.pdb_427d, 'R', False, self.restraints_config)
+        data = self.buffer.getvalue()
+        # we should not have restraints to non-standard nucleotides
+        # G49 has res id 4
+        self.assertNotIn("chain A resi 4", data)
+        # DM1 has res id 7
+        self.assertNotIn("chain A resi 7", data)
