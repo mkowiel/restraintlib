@@ -80,9 +80,10 @@ RIBOSE_PYRIMIDINE_REQUIRED_CONDITION = [
     ("C4'", "C5'", 2.0, 0, 0),
     ("C5'", "O5'", 2.0, 0, 0),
     ("C2'", "O2'", 2.0, 0, 0),
-    ("C1'", 'N1', 2.0, 0, 0),
-    ("O5'", 'P', 2.5, 0, 0),
-    ("O3'", 'P', 2.5, 0, 1)
+    ("C1'", "N1", 2.0, 0, 0),
+    ("N1", "C2", 2.0, 0, 0),
+    ("O5'", "P", 2.5, 0, 0),
+    ("O3'", "P", 2.5, 0, 1)
 ]
 RIBOSE_PYRIMIDINE_ALL_REQUIRED_CONDITION = RIBOSE_PYRIMIDINE_REQUIRED_CONDITION
 RIBOSE_PYRIMIDINE_CHI_GAMMA_REQUIRED_CONDITION = RIBOSE_PYRIMIDINE_REQUIRED_CONDITION
