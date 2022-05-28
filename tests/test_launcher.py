@@ -24,6 +24,7 @@ class RestrainLibTestCase(TestCase):
         self.pdb_4r15 = os.path.join(os.path.dirname(os.path.abspath(__file__)), '4r15.pdb')
         self.pdb_disorder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'disorder.pdb')
         self.pdb_427d = os.path.join(os.path.dirname(os.path.abspath(__file__)), '427d.pdb')
+        self.pdb_5cdb = os.path.join(os.path.dirname(os.path.abspath(__file__)), '5cdb.pdb')
         self.mmcif_3p4j = os.path.join(os.path.dirname(os.path.abspath(__file__)), '3p4j.cif')
         self.mmcif_1d8g = os.path.join(os.path.dirname(os.path.abspath(__file__)), '1d8g.cif')
         self.mmcif_3ssf = os.path.join(os.path.dirname(os.path.abspath(__file__)), '3ssf.cif')
@@ -657,3 +658,10 @@ class RestrainLibTestCase(TestCase):
         self.assertNotIn("chain A resi 4", data)
         # DM1 has res id 7
         self.assertNotIn("chain A resi 7", data)
+
+    def test_missing_C2_atom_5cdb_pdb(self):
+        self.lib.produce_restraints(self.pdb_5cdb, 'P', False, self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assertIn("chain B and resid 22 and name C2\n", data)
+        # atom C2 is missing in resi 18 in chain B
+        self.assertNotIn("chain B and resid 18 and name C2\n", data)
