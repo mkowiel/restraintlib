@@ -31,7 +31,7 @@ setup(
     install_requires=[
         'six',
         'cctbx-base>=2020.8',
-        'scikit-learn>0.21',
+        'scikit-learn>0.21,<1.0',
         'pandas',
         'pytest',
     ],
