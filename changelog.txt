@@ -1,3 +1,7 @@
+# 2022.5.2
+
+Fix issues with missing residue ordering when res_id containing iCode (5hr7)
+
 # 2022.5.1
 
 Fix issues with missing atoms when checking torsion angle conditions (5CDB)

@@ -29,7 +29,7 @@ from restraintlib.lib import ribose_pyrimidine_terminal_C5
 
 from cctbx.array_family import flex
 
-VERSION = '2022.5.1'
+VERSION = '2022.5.2'
 
 
 def regressor_absolute_path(filename):
@@ -560,7 +560,9 @@ class MonomerRestraintGroup(object):
         'restraints',
         'atoms',
         'groups',
-        '_registered_res_id'
+        '_registered_res_id',
+        '_res_id_pos',
+        '_pos_res_id',
     )
 
     def __init__(
@@ -593,16 +595,43 @@ class MonomerRestraintGroup(object):
         # dict (chain_id, res_id-modifier, altloc): [] - lists with indexes to atoms
         self.groups = defaultdict(AtomGroupCache)
 
+        self._res_id_pos = defaultdict(dict)
+        self._pos_res_id = defaultdict(list)
         # keep the res if that matches the pdb_code
+        # chain -> res_id -> position
         self._registered_res_id = defaultdict(set)
 
+    def register_res_id(self, chain_id, res_id):
+        _chain_id = chain_id.strip()
+        if res_id not in self._res_id_pos[_chain_id]:
+            self._res_id_pos[_chain_id][res_id] = len(self._pos_res_id[_chain_id])
+            self._pos_res_id[_chain_id].append(res_id)
+
+    def prev_res_id(self, chain_id, res_id):
+        _chain_id = chain_id.strip()
+        pos = self._res_id_pos[_chain_id][res_id]
+        if pos > 0:
+            return self._pos_res_id[_chain_id][pos-1]
+        return None
+
+    def next_res_id(self, chain_id, res_id):
+        _chain_id = chain_id.strip()
+        pos = self._res_id_pos[_chain_id][res_id]
+        if pos < len(self._pos_res_id[_chain_id])-1:
+            return self._pos_res_id[_chain_id][pos+1]
+        return None
+
     def register_valid_res_id(self, chain_id, res_id):
-        self._registered_res_id[chain_id.strip()].add(int(res_id))
+        self._registered_res_id[chain_id.strip()].add(res_id)
 
     def is_registered_res_id_or_neighbour(self, chain_id, res_id):
-        _res_id = int(res_id)
-        registered_res_id = self._registered_res_id.get(chain_id.strip(), set())
-        return (_res_id in registered_res_id) or (_res_id+1 in registered_res_id) or (_res_id-1 in registered_res_id)
+        _chain_id = chain_id.strip()
+        registered_res_id = self._registered_res_id.get(_chain_id, set())
+        return (
+            (res_id in registered_res_id)
+            or (self.next_res_id(_chain_id, res_id) in registered_res_id)
+            or (self.prev_res_id(_chain_id, res_id) in registered_res_id)
+        )
 
     def is_valid_res_name(self, res_name):
         return res_name.strip() in self.res_names
@@ -618,11 +647,13 @@ class MonomerRestraintGroup(object):
             # self.atoms can be inefficient
             # we should get it from the self.group[group_key]
             # to do so we need to refactor self.group dict into proper class
-            atom_1 = group.find_neighbour(chain_id, atom_name_1, res_id + res_id_mod_1, alt_id)
-            atom_2 = group.find_neighbour(chain_id, atom_name_2, res_id + res_id_mod_2, alt_id)
+            res_id_1 = self.relative_res_id_for_atom(chain_id, res_id, res_id_mod_1)
+            res_id_2 = self.relative_res_id_for_atom(chain_id, res_id, res_id_mod_2)
+            atom_1 = group.find_neighbour(chain_id, atom_name_1, res_id_1, alt_id)
+            atom_2 = group.find_neighbour(chain_id, atom_name_2, res_id_2, alt_id)
             if atom_1 is not None and atom_2 is not None and atom_1.dist(atom_2) <= dist:
                 return True
-            #print("Disallowed atoms not found", self.name, chain_id, atom_name_1, res_id + res_id_mod_1, alt_id, chain_id, atom_name_2, res_id + res_id_mod_2, alt_id)
+            #print("Disallowed atoms not found", self.name, chain_id, atom_name_1, res_id_1, alt_id, chain_id, atom_name_2, res_id_2, alt_id)
         return False
 
     def add_atom(self, chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, i_seq):
@@ -630,22 +661,34 @@ class MonomerRestraintGroup(object):
             atom = Atom(chain_id, res_id, res_name, atom_name, alt_loc, atom_xyz, i_seq)
             self.atoms.append(atom)
 
+    def relative_res_id_for_atom(self, chain_id, res_id, res_id_delta):
+        if res_id_delta == 0:
+            return res_id
+        if res_id_delta == -1:
+            return self.prev_res_id(chain_id, res_id)
+        if res_id_delta == 1:
+            return self.next_res_id(chain_id, res_id)
+
     def create_res_groups(self):
         preliminary_groups = defaultdict(AtomGroupCache)
 
         for chain_id, registered_res_id in six.iteritems(self._registered_res_id):
             for res_id in registered_res_id:
                 for i_atom, atom in enumerate(self.atoms):
-                    key = "{}_{:05d}".format(chain_id, res_id)
+                    key = "{}_{}".format(chain_id, res_id)
                     if (
                         chain_id == atom.chain_id and
                         atom.atom_name in self.res_numbers and
-                        res_id == atom.res_id - self.res_numbers[atom.atom_name]
+                        res_id == self.relative_res_id_for_atom(atom.chain_id, atom.res_id, -self.res_numbers[atom.atom_name])
                     ):
                         preliminary_groups[key].add_atom(atom)
                     if (
                         chain_id == atom.chain_id
-                        and abs(res_id - atom.res_id) <= 1
+                        and (
+                            res_id == atom.res_id
+                            or res_id == self.prev_res_id(atom.chain_id, atom.res_id)
+                            or res_id == self.next_res_id(atom.chain_id, atom.res_id)
+                        )
                         # fix for restraints for G49 in 427d.pdb
                         and self.is_standard_res_name(atom.res_name)
                     ):
@@ -680,7 +723,7 @@ class MonomerRestraintGroup(object):
     def is_valid_atom_group(self, group_key, group, verbose):
         split_key = group_key.split("_")
         chain_id = split_key[0].strip()
-        res_id = int(split_key[1])
+        res_id = split_key[1]
         alt_id = '' if len(split_key) < 3 else split_key[2].strip()
 
         if self.any_atom_in_disallowed_atoms(group, chain_id, res_id, alt_id):
@@ -688,8 +731,10 @@ class MonomerRestraintGroup(object):
 
         for atom_name_1, atom_name_2, dist, res_id_mod_1, res_id_mod_2 in self.conditions:
             # if it is atom1.alt_id == '' and atom2.alt_id=='A', atom2.alt_id=='B' there is a problem
-            atom_1 = group.find_neighbour(chain_id, atom_name_1, res_id + res_id_mod_1, alt_id)
-            atom_2 = group.find_neighbour(chain_id, atom_name_2, res_id + res_id_mod_2, alt_id)
+            res_id_1 = self.relative_res_id_for_atom(chain_id, res_id, res_id_mod_1)
+            res_id_2 = self.relative_res_id_for_atom(chain_id, res_id, res_id_mod_2)
+            atom_1 = group.find_neighbour(chain_id, atom_name_1, res_id_1, alt_id)
+            atom_2 = group.find_neighbour(chain_id, atom_name_2, res_id_2, alt_id)
 
             if atom_1 is None or atom_2 is None or atom_1.dist(atom_2) > dist:
                 if verbose > 0:
@@ -831,9 +876,9 @@ def analyze_pdb_hierarhy(pdb_hierarchy, restraint_groups, allowed_restraint_grou
                 for atom_group in residue_group.atom_groups():
                     # if necessary only for speed optimization
                     for restraint in restraint_groups:
+                        restraint.register_res_id(chain.id, residue_group.resid())
                         if restraint.is_valid_res_name(atom_group.resname):
                             restraint.register_valid_res_id(chain.id, residue_group.resid())
-
 
     for model in pdb_hierarchy.models():
         for chain in model.chains():

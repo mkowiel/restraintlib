@@ -23,7 +23,7 @@ class Atom(object):
         :param atom_xyz: xyz coordinates of the atom
         """
         self.chain_id = chain_id.strip()
-        self.res_id = int(res_id)
+        self.res_id = res_id
         self.res_name = res_name.strip()
         self.atom_name = atom_name.strip()
         self.alt_loc = alt_loc.strip()
