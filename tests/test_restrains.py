@@ -126,4 +126,49 @@ class RestraintTestCase(TestCase):
 class MonomerRestraintGroupTestCase(TestCase):
 
     def setUp(self):
-        self.restraint = MonomerRestraintGroup(None, None, None, None, None, None, None, None)
+        distance_measure = {
+            'measure': 'euclidean_angles',
+            'restraint_names': []
+        }
+
+        restraints = [
+            {
+                "conditions": [
+                    ["torsion", "tC3O3P4O5", ["O5'", "P", "O3'", "C3'"], -66.636, 7.779],
+                    ["torsion", "tC5O5P4O3", ["O3'", "P", "O5'", "C5'"], 171.37, 14.971]
+                ],
+                "name": "PO4==AA_0",
+                "restraints": [
+                    ["angle", "aO1O2", ["OP1", "P", "OP2"], 117.6, 1.2],
+                    ["angle", "aO1O3", ["OP1", "P", "O3'"], 106.2, 1.1],
+                    ["angle", "aO1O5", ["OP1", "P", "O5'"], 110.2, 1.3],
+                    ["angle", "aO2O3", ["OP2", "P", "O3'"], 112.2, 1.0],
+                    ["angle", "aO2O5", ["OP2", "P", "O5'"], 109.3, 0.9],
+                    ["angle", "aO3O5", ["O3'", "P", "O5'"], 99.9, 0.7],
+                    ["angle", "aP4O3C3", ["P", "O3'", "C3'"], 120.2, 1.5],
+                    ["angle", "aP4O5C5", ["P", "O5'", "C5'"], 121.7, 3.0],
+                    ["dist", "dO1P4", ["OP1", "P"], 1.487, 0.01],
+                    ["dist", "dO2P4", ["OP2", "P"], 1.483, 0.01],
+                    ["dist", "dO3P4", ["O3'", "P"], 1.601, 0.008],
+                    ["dist", "dO5P4", ["O5'", "P"], 1.591, 0.004],
+                    ["dist", "dO3C3", ["O3'", "C3'"], 1.422, 0.010],
+                    ["dist", "dO5C5", ["O5'", "C5'"], 1.428, 0.013]
+                ]
+            },
+        ]
+
+        self.restraint = MonomerRestraintGroup(None, None, {}, None, None, None, restraints, distance_measure, distance_measure)
+
+    def test_register_res_id(self):
+        self.restraint.register_res_id('A', '1')
+        self.restraint.register_res_id('A', '2')
+        self.restraint.register_res_id('A', '3')
+
+        self.assertEqual(self.restraint.prev_res_id('A', '1'), None)
+        self.assertEqual(self.restraint.next_res_id('A', '1'), '2')
+
+        self.assertEqual(self.restraint.prev_res_id('A', '2'), '1')
+        self.assertEqual(self.restraint.next_res_id('A', '2'), '3')
+
+        self.assertEqual(self.restraint.prev_res_id('A', '3'), '2')
+        self.assertEqual(self.restraint.next_res_id('A', '3'), None)
