@@ -25,6 +25,7 @@ class RestrainLibTestCase(TestCase):
         self.pdb_disorder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'disorder.pdb')
         self.pdb_427d = os.path.join(os.path.dirname(os.path.abspath(__file__)), '427d.pdb')
         self.pdb_5cdb = os.path.join(os.path.dirname(os.path.abspath(__file__)), '5cdb.pdb')
+        self.pdb_5hr7 = os.path.join(os.path.dirname(os.path.abspath(__file__)), '5hr7.pdb')
         self.mmcif_3p4j = os.path.join(os.path.dirname(os.path.abspath(__file__)), '3p4j.cif')
         self.mmcif_1d8g = os.path.join(os.path.dirname(os.path.abspath(__file__)), '1d8g.cif')
         self.mmcif_3ssf = os.path.join(os.path.dirname(os.path.abspath(__file__)), '3ssf.cif')
@@ -377,6 +378,7 @@ class RestrainLibTestCase(TestCase):
 
         self.assertIn("AA_3", data)
         self.assertIn("AS_3", data)
+
         self.assert_guanine(data)
         self.assert_cytosine(data)
         self.assert_deoxyribose(data)
@@ -476,6 +478,7 @@ class RestrainLibTestCase(TestCase):
         self.lib.produce_restraints(self.pdb_3p4j, 'P', False, self.restraints_config)
         data = self.buffer.getvalue()
         self.assert_3p4j(data)
+        self.assertIn("atom_selection_1 = chain A and resid 2 and name O3'\n    atom_selection_2 = chain A and resid 3 and name P\n", data)
 
     def test_produce_restraints_shelx_3p4j_pdb(self):
         self.lib.produce_restraints(self.pdb_3p4j, 'S', False, self.restraints_config)
@@ -665,3 +668,8 @@ class RestrainLibTestCase(TestCase):
         self.assertIn("chain B and resid 22 and name C2\n", data)
         # atom C2 is missing in resi 18 in chain B
         self.assertNotIn("chain B and resid 18 and name C2\n", data)
+
+    def test_non_integer_res_id_5hr7_pdb(self):
+        self.lib.produce_restraints(self.pdb_5hr7, 'P', False, self.restraints_config)
+        data = self.buffer.getvalue()
+        self.assertIn("atom_selection_1 = chain D and resid 20A and name O3'\n    atom_selection_2 = chain D and resid 20 and name P\n", data)

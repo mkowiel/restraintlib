@@ -163,7 +163,7 @@ class ShelxPrinter(PrinterBase):
             rem = 'REM Chain {} and resid {} and name {} and altloc {} renamed to {}_{}{}'
             rem = rem.format(
                 atom.chain_id,
-                atom.res_id,
+                atom.res_id.strip(),
                 atom.atom_name,
                 atom.alt_loc,
                 atom.atom_name,
@@ -330,7 +330,7 @@ class PhenixPrinter(PrinterBase):
     def _atom_sel(cls, atom):
         return "chain {} and resid {} and name {}{}".format(
             atom.chain_id,
-            atom.res_id,
+            atom.res_id.strip(),
             atom.atom_name,
             cls._get_alt_loc(atom),
         )
@@ -476,12 +476,12 @@ class RefmacPrinter(PrinterBase):
         #print(type(restraint.value), type(restraint.sigma))
         line = "exte dist first chain {} resi {} atom {}{} second chain {} resi {} atom {}{} value {:.3f} sigma {:.3f} type {}".format(
             atom0.chain_id,
-            atom0.res_id,
+            atom0.res_id.strip(),
             atom0.atom_name,
             self._get_alt_loc(atom0),
 
             atom1.chain_id,
-            atom1.res_id,
+            atom1.res_id.strip(),
             atom1.atom_name,
             self._get_alt_loc(atom1),
 
@@ -505,17 +505,17 @@ class RefmacPrinter(PrinterBase):
         #print(type(restraint.value), type(restraint.sigma))
         line = "exte angle first chain {} resi {} atom {}{} next chain {} resi {} atom {}{} next chain {} resi {} atom {}{} value {:.1f} sigma {:.1f} type {}".format(
             atom0.chain_id,
-            atom0.res_id,
+            atom0.res_id.strip(),
             atom0.atom_name,
             self._get_alt_loc(atom0),
 
             atom1.chain_id,
-            atom1.res_id,
+            atom1.res_id.strip(),
             atom1.atom_name,
             self._get_alt_loc(atom1),
 
             atom2.chain_id,
-            atom2.res_id,
+            atom2.res_id.strip(),
             atom2.atom_name,
             self._get_alt_loc(atom2),
 
@@ -565,12 +565,12 @@ class BusterPrinter(PrinterBase):
             self.dist_sigma_value(restraint.sigma),
 
             atom0.chain_id,
-            atom0.res_id,
+            atom0.res_id.strip(),
             atom0.atom_name,
             self._get_alt_loc(atom0),
 
             atom1.chain_id,
-            atom1.res_id,
+            atom1.res_id.strip(),
             atom1.atom_name,
             self._get_alt_loc(atom1),
         )
@@ -592,17 +592,17 @@ class BusterPrinter(PrinterBase):
             self.angle_sigma_value(restraint.sigma),
 
             atom0.chain_id,
-            atom0.res_id,
+            atom0.res_id.strip(),
             atom0.atom_name,
             self._get_alt_loc(atom0),
 
             atom1.chain_id,
-            atom1.res_id,
+            atom1.res_id.strip(),
             atom1.atom_name,
             self._get_alt_loc(atom1),
 
             atom2.chain_id,
-            atom2.res_id,
+            atom2.res_id.strip(),
             atom2.atom_name,
             self._get_alt_loc(atom2),
         )
@@ -631,12 +631,12 @@ class CsvPrinter(PrinterBase):
             restraint.name,
 
             atom0.chain_id,
-            atom0.res_id,
+            atom0.res_id.strip(),
             atom0.atom_name,
             self._get_alt_loc(atom0),
 
             atom1.chain_id,
-            atom1.res_id,
+            atom1.res_id.strip(),
             atom1.atom_name,
             self._get_alt_loc(atom1),
 
@@ -660,17 +660,17 @@ class CsvPrinter(PrinterBase):
             restraint.name,
 
             atom0.chain_id,
-            atom0.res_id,
+            atom0.res_id.strip(),
             atom0.atom_name,
             self._get_alt_loc(atom0),
 
             atom1.chain_id,
-            atom1.res_id,
+            atom1.res_id.strip(),
             atom1.atom_name,
             self._get_alt_loc(atom1),
 
             atom2.chain_id,
-            atom2.res_id,
+            atom2.res_id.strip(),
             atom2.atom_name,
             self._get_alt_loc(atom2),
 
