@@ -623,12 +623,12 @@ class RestrainLibTestCase(TestCase):
     slack = None
   }"""
 
-        dO5P4 = """# Restraint PO4==AS_3 dist dO5P4 1.594 0.009
+        dO5P4 = """# Restraint PO4==AS_3 dist dO5P4 1.601 0.016
   bond {
     action = *change
     atom_selection_1 = chain A and resid 2 and name P
     atom_selection_2 = chain A and resid 2 and name O5'
-    distance_ideal = 1.594
+    distance_ideal = 1.601
     sigma = 0.020
     slack = None
   }"""
