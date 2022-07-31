@@ -20,9 +20,9 @@ Bond length and angle restraints for DNA and RNA oligonucleotides.
 Scripts were tested with
 
 * Python 3.7
-* cctbx==2020.10 [cctbx_project](https://github.com/cctbx/cctbx_project)
-* scikit-learn==0.20.3
-* numpy==1.15.4
+* cctbx==2021.6 [cctbx_project](https://github.com/cctbx/cctbx_project)
+* scikit-learn==1.0.2
+* numpy==1.20.3
 
 # Installation
 
