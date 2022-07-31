@@ -7,6 +7,8 @@ from sklearn.linear_model import BayesianRidge
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import WhiteKernel, ExpSineSquared
 from sklearn.metrics import mean_squared_error, median_absolute_error, r2_score, mean_absolute_error
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 __author__ = "Marcin Kowiel, Dariusz Brzezinski"
 
@@ -25,6 +27,11 @@ def save_regressor_stats(regressor, x, y, group, y_col, stats_df):
         decision_func = "{0} + {1:.3f}".format(str(regressor.kernel_), regressor._y_train_mean)
     except:
         decision_func = "{0:.3f}x + {1:.3f}".format(regressor.coef_[0], regressor.intercept_)
+        # TODO: preparing for scikitlearn 1.2.X
+        #decision_func = "{0:.3f}x + {1:.3f}".format(
+        #    regressor['standardscaler'].scale_[0]*regressor['bayesianridge'].coef_[0],
+        #    regressor['standardscaler'].scale_[0]*regressor['bayesianridge'].intercept_
+        #)
 
     stats = pd.DataFrame({
         "Subgroup": [group],
@@ -52,6 +59,10 @@ def create_linear_regressors(df, x_col, y_cols, stats_df, dir_name='lib/regresso
                 y = df.loc[:, y_col][df.Sugar == sugar][df.Conformation == conformation]
 
                 gpr = BayesianRidge(normalize=True)
+                # TODO: preparing for scikitlearn 1.2.X
+                # the problem is that
+                # gpr.predict([[x]], return_std=True) return wrong sigme (not normalized by StandardScaler)
+                #gpr = make_pipeline(StandardScaler(with_mean=False),  BayesianRidge(normalize=False))
                 gpr.fit(x, y)
 
                 stats_df = save_regressor_stats(gpr, x, y, sugar + "-" + conformation, y_col, stats_df)
@@ -111,7 +122,7 @@ def run():
     print(sugar_measurements.head())
     stats_df = pd.DataFrame()
     stats_df = create_linear_regressors(sugar_measurements, "T_max",
-                                        ["C1'-C2'-C3'", "C2'-C3'-C4'", "C3'-C4'-O4'", "C1'-O4'-C4'"], 
+                                        ["C1'-C2'-C3'", "C2'-C3'-C4'", "C3'-C4'-O4'", "C1'-O4'-C4'"],
                                         stats_df,
                                         dir_name=abs_pickle_dir)
     stats_df = create_sine_regressors(sugar_measurements, "TCHI", ["C1'-N1/C1'-N9", "C1'-O4'"], 180, stats_df,

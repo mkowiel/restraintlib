@@ -1,3 +1,7 @@
+# 2022.8.1
+
+Update scikit-learn dependency version to 1.0.X
+
 # 2022.6.1
 
 Update values for P-O3', P-O5', P-O3'-C3', P-O5'-C5' to be based on https://doi.org/10.1093/nar/gkw717, Supplementary materials, Table S2

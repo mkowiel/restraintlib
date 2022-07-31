@@ -52,7 +52,7 @@ You can download for example https://repo.anaconda.com/miniconda/Miniconda3-late
     conda create -n cctbx python=3.7
     conda install --force-reinstall -n cctbx -c conda-forge cctbx-base
     conda install --force-reinstall -n cctbx -c conda-forge pytest
-    conda install --force-reinstall -n cctbx -c conda-forge "scikit-learn>0.21,<1.0"
+    conda install --force-reinstall -n cctbx -c conda-forge "scikit-learn>1.0,<1.1"
     conda install -c conda-forge conda-build conda-verify
     ```
 

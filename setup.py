@@ -7,7 +7,7 @@ def read(fname):
 
 setup(
     name='RestraintLib',
-    version='2022.6.1',
+    version='2022.8.1',
     description='Bond length and angle restraints for DNA and RNA oligonucleotides',
     long_description=read('README.md'),
     author='Marcin Kowiel, Dariusz Brzezinski',
@@ -23,7 +23,6 @@ setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
@@ -31,7 +30,7 @@ setup(
     install_requires=[
         'six',
         'cctbx-base>=2020.8',
-        'scikit-learn>0.21,<1.0',
+        'scikit-learn>1.0,<1.1',
         'pandas',
         'pytest',
     ],
