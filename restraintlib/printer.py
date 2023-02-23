@@ -140,18 +140,17 @@ class ShelxPrinter(PrinterBase):
         chainid = str(atom.chain_id).strip()
         return resid if chainid == '' else ("%s:%s" % (chainid, resid))
 
-    @classmethod
-    def _comment(cls, restraint):
+    def _comment(self, restraint):
         if restraint.condition_name is not None and restraint.name is not None:
             if len(restraint.condition_name) < 64:
                 restraint_condition_name_line = 'REM Restraint {}'.format(restraint.condition_name)
             else:
                 restraint_condition_name_line = 'REM Restraint\nREM {}'.format(restraint.condition_name)
             if restraint.type == 'angle':
-                return '{}\nREM {} {} {:.1f} {:.1f}'.format(
-                    restraint_condition_name_line, restraint.type, restraint.name, restraint.value, restraint.sigma)
+                return '{}\nREM {} {} {:.1f} {:.3f}'.format(
+                    restraint_condition_name_line, restraint.type, restraint.name, restraint.value, self.angle_sigma_value(restraint.sigma))
             return '{}\nREM {} {} {:.3f} {:.3f}'.format(
-                restraint_condition_name_line, restraint.type, restraint.name, restraint.value, restraint.sigma)
+                restraint_condition_name_line, restraint.type, restraint.name, restraint.value, self.dist_sigma_value(restraint.sigma))
         return ''
 
     @classmethod
@@ -175,6 +174,12 @@ class ShelxPrinter(PrinterBase):
             rem = ''
         return resid, alt_code, rem
 
+    def angle_sigma_value(self, value):
+        return 0.04 if self.override_sigma else value
+
+    def dist_sigma_value(self, value):
+        return 0.02 if self.override_sigma else value
+
     def get_dist(self, restraint, all_restraints):
         atom0 = restraint.atoms[0]
         atom1 = restraint.atoms[1]
@@ -191,7 +196,7 @@ class ShelxPrinter(PrinterBase):
 
         lines.append('DFIX {:.3f} {:.3f} {}_{}{} {}_{}{}'.format(
             restraint.value,
-            restraint.sigma,
+            self.dist_sigma_value(restraint.sigma),
             atom0.atom_name,
             resid_0,
             alt_code_0,
@@ -301,7 +306,7 @@ class ShelxPrinter(PrinterBase):
 
         lines.append('DANG {:.3f} {:.3f} {}_{}{} {}_{}{}'.format(
             self._val_deg_to_dist(restraint, all_restraints),
-            self._sig_deg_to_dist(restraint, all_restraints),
+            self.angle_sigma_value(self._sig_deg_to_dist(restraint, all_restraints)),
             atom0.atom_name,
             resid_0,
             alt_code_0,
