@@ -1,3 +1,7 @@
+# 2023.2.1
+
+Override sigma for ShelxPrinter
+
 # 2022.8.1
 
 Update scikit-learn dependency version to 1.0.X
